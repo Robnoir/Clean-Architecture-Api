@@ -47,5 +47,8 @@ namespace Test.DogTests.QueryTest
             // Assert
             Assert.IsNull(result);
         }
+
+        
     }
 }
+
