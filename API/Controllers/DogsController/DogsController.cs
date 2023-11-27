@@ -57,7 +57,7 @@ namespace API.Controllers.DogsController
         // IMPLEMENT DELETE !!!
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Deletedogbyid(Guid id)
+        public async Task<IActionResult> DeleteDogById(Guid id)
         {
             var dog = await _mediator.Send(new DeleteDogByIdCommand(id));
 

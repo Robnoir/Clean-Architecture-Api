@@ -41,7 +41,7 @@ namespace Test.DogTests.CommandTest
             var existingDogId = new Guid("12345678-1234-5678-1234-567812345679"); // ID of "TestDeleteDog"
 
             // Act
-            var result = await _dogscontroller.Deletedogbyid(existingDogId);
+            var result = await _dogscontroller.DeleteDogById(existingDogId);
 
             // Assert
             Assert.IsInstanceOf<NoContentResult>(result);
@@ -54,9 +54,10 @@ namespace Test.DogTests.CommandTest
         {
             //Arrange
             var nonExistingDog = new Guid();
-
+            _mockDatabase.Dogs.Clear();
+          
             //Act
-            var result = await _dogscontroller.Deletedogbyid(nonExistingDog);
+            var result = await _dogscontroller.DeleteDogById(nonExistingDog);
 
             //Assert
             Assert.IsInstanceOf<NotFoundResult>(result);
