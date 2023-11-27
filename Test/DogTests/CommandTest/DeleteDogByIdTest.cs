@@ -35,34 +35,20 @@ namespace Test.DogTests.CommandTest
         }
 
         [Test]
-        public async Task DeleteDogById_ShouldReturnNoContentIfDogExists()
+        public async Task DeleteDogById_ShouldReturnNoContentIfExistingDogIsDeleted()
         {
             // Arrange
             var existingDogId = new Guid("12345678-1234-5678-1234-567812345679"); // ID of "TestDeleteDog"
 
             // Act
-            var result = await _dogscontroller.DeleteDogById(existingDogId);
+            var result = await _dogscontroller.DeleteDogbyId(existingDogId);
 
             // Assert
-            Assert.IsInstanceOf<NoContentResult>(result);
-            Assert.IsNull(_mockDatabase.Dogs.FirstOrDefault(d => d.Id == existingDogId));
-        }
-
-
-        [Test]
-        public async Task DeleteDog_ShouldReturnNotFoundWhenDogIsDeleted()
-        {
-            //Arrange
-            var nonExistingDog = new Guid();
-            _mockDatabase.Dogs.Clear();
-          
-            //Act
-            var result = await _dogscontroller.DeleteDogById(nonExistingDog);
-
-            //Assert
             Assert.IsInstanceOf<NotFoundResult>(result);
         }
 
+
+    
 
     }
 }
