@@ -10,7 +10,7 @@ namespace Infrastructure.Database
             set { allDogs = value; }
         }
 
-        private static List<Dog> allDogs = new()
+        public  List<Dog> allDogs = new()
         {
             new Dog { Id = Guid.NewGuid(), Name = "Björn"},
             new Dog { Id = Guid.NewGuid(), Name = "Patrik"},
