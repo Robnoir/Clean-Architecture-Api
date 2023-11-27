@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Test.DogTests.CommandTest
 {
+    [TestFixture]
     internal class DeleteDogByIdTest
     {
         private MockDatabase _mockDatabase;

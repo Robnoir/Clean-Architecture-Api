@@ -17,6 +17,7 @@ namespace Test.DogTests.QueryTest
             _handler = new GetDogByIdQueryHandler(_mockDatabase);
         }
 
+        //Test for returning the correct dog searched by a specifik ID
         [Test]
         public async Task Handle_ValidId_ReturnsCorrectDog()
         {
