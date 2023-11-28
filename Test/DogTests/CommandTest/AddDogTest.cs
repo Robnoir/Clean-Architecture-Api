@@ -33,10 +33,10 @@ namespace Test.DogTests.CommandTest
             var result = await _handler.Handle(command, CancellationToken.None);
 
             // Assert
-            var newdoginDB = _mockDatabase.Dogs.FirstOrDefault(dog => dog.Name == "Rio");
+            var newDogToDB = _mockDatabase.Dogs.FirstOrDefault(dog => dog.Name == "Rio");
 
-            Assert.IsNotNull(newdoginDB);
-            Assert.That(newdoginDB.Name, Is.EqualTo("Rio"));
+            Assert.IsNotNull(newDogToDB);
+            Assert.That(newDogToDB.Name, Is.EqualTo("Rio"));
         }
     }
 }
