@@ -1,4 +1,4 @@
-﻿using Application.Commands.Dogs;
+﻿using Application.Commands.Cats.AddCat;
 using Application.Dtos;
 using Infrastructure.Database;
 using System;
@@ -7,37 +7,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test.DogTests.CommandTest
+namespace Test.Cat_Test.CommandTest
 {
-    [TestFixture]
-    internal class AddDogTest
+    internal class AddCatTest
     {
         private MockDatabase _mockDatabase;
-        private AddDogCommandHandler _handler;
+        private AddCatCommandHandler _handler;
 
         [SetUp]
         public void SetUp()
         {
-
-            //Initializes the mockdatabase and handler before every test
+            // Initialisera mockdatabasen och hanteraren innan varje test
             _mockDatabase = new MockDatabase();
-            _handler = new AddDogCommandHandler(_mockDatabase);
+            _handler = new AddCatCommandHandler(_mockDatabase);
         }
 
         [Test]
         public async Task Handle_ChecksAddedDog_ReturnTrue()
         {
             // Arrange
-            var command = new AddDogCommand(new DogDto { Name = "Rio" });
+            var command = new AddCatCommand(new CatDto { Name = "MioMao" });
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
             // Assert
-            var newDogToDB = _mockDatabase.Dogs.FirstOrDefault(dog => dog.Name == "Rio");
+            var newCatToDB = _mockDatabase.Cats.FirstOrDefault(cat => cat.Name == "MioMao");
 
-            Assert.IsNotNull(newDogToDB);
-            Assert.That(newDogToDB.Name, Is.EqualTo("Rio"));
+            Assert.IsNotNull(newCatToDB);
+            Assert.That(newCatToDB.Name, Is.EqualTo("MioMao"));
         }
     }
 }

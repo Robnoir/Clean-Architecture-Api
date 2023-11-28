@@ -1,5 +1,6 @@
-﻿using API.Controllers.DogsController;
-using Application.Commands.Dogs.DeleteDog;
+﻿
+using API.Controllers.CatsController;
+using Application.Commands.Cats.DeleteCat;
 using Domain.Models;
 using Infrastructure.Database;
 using MediatR;
@@ -11,14 +12,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-namespace Test.DogTests.CommandTest
+namespace Test.Cat_Test.CommandTest
 {
     [TestFixture]
     internal class DeleteDogByIdTest
     {
         private MockDatabase _mockDatabase;
-        private DogsController _dogscontroller;
+        private CatsController _catscontroller;
         private Mock<IMediator> _mediatormock;
 
         [SetUp]
@@ -26,23 +26,23 @@ namespace Test.DogTests.CommandTest
         {
             _mediatormock = new Mock<IMediator>();
 
-            _mediatormock.Setup(m => m.Send(It.IsAny<DeleteDogByIdCommand>(), default(CancellationToken)))
-                .Returns(Task.FromResult((Dog)null));
+            _mediatormock.Setup(m => m.Send(It.IsAny<DeleteCatByIdCommand>(), default(CancellationToken)))
+                .Returns(Task.FromResult((Cat)null));
 
             _mockDatabase = new MockDatabase();
-            _dogscontroller = new DogsController(_mediatormock.Object);
+            _catscontroller = new CatsController(_mediatormock.Object);
 
 
         }
 
         [Test]
-        public async Task DeleteDogById_ShouldReturnNoContentIfExistingDogIsDeleted()
+        public async Task DeleteCatById_ShouldReturnNoContentIfExistingCatIsDeleted()
         {
             // Arrange
-            var existingDogId = new Guid("12345678-1234-5678-1234-567812345679"); // ID of "TestDeleteDog"
+            var existingDogId = new Guid("12345678-1234-5678-1234-567812345610"); // ID of "TestDeleteCat"
 
             // Act
-            var result = await _dogscontroller.DeleteDogbyId(existingDogId);
+            var result = await _catscontroller.DeleteCatById(existingDogId);
 
             // Assert
             Assert.IsInstanceOf<NotFoundResult>(result);

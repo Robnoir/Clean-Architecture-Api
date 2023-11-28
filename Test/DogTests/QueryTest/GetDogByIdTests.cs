@@ -49,7 +49,7 @@ namespace Test.DogTests.QueryTest
             Assert.IsNull(result);
         }
 
-        
+
     }
 }
 

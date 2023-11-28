@@ -18,8 +18,8 @@ namespace Application.Commands.Dogs.DeleteDog
             _mockDatabase = mockDatabase;
         }
 
-     
-       public Task<Dog> Handle(DeleteDogByIdCommand request, CancellationToken cancellationToken)
+
+        public Task<Dog> Handle(DeleteDogByIdCommand request, CancellationToken cancellationToken)
         {
             var dogToDelete = _mockDatabase.Dogs.FirstOrDefault(dog => dog.Id == request.Id);
 
