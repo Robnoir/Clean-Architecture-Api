@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Commands.Dogs.UpdateDog
 {
-    internal class UpdateDogByIdCommandHandler : IRequestHandler<UpdateDogByIdCommand, Dog>
+    public class UpdateDogByIdCommandHandler : IRequestHandler<UpdateDogByIdCommand, Dog>
     {
         private readonly MockDatabase _mockDatabase;
 
