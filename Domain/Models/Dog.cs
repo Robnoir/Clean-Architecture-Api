@@ -2,7 +2,7 @@
 
 namespace Domain.Models
 {
-    public class Dog: AnimalModel
+    public class Dog : AnimalModel
     {
         public string Bark()
         {

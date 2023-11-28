@@ -17,7 +17,7 @@ namespace Test.GetAllDogsTests.QueryTest
         public void SetUp()
         {
             _mockDatabase = new MockDatabase();
-            _handler = new (_mockDatabase);
+            _handler = new(_mockDatabase);
         }
         [Test]
         public async Task GetAllDogs_ShouldReturnallDogsInList()
@@ -30,7 +30,7 @@ namespace Test.GetAllDogsTests.QueryTest
 
             // Assert
             Assert.NotNull(result);
-            Assert.AreEqual(expectedNumberOfDogs, result.Count);
+            Assert.That(result.Count, Is.EqualTo(expectedNumberOfDogs));
 
 
         }

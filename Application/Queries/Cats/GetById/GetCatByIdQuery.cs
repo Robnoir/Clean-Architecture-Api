@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Commands.Dogs.DeleteDog
+namespace Application.Queries.Cats.GetById
 {
-    public class DeleteDogByIdCommand : IRequest<Dog>
-
+    public class GetCatByIdQuery : IRequest<Cat>
     {
-        public DeleteDogByIdCommand(Guid id)
+        public GetCatByIdQuery(Guid catId)
         {
-            Id = id;
+            Id = catId;
         }
         public Guid Id { get; }
+
     }
 }

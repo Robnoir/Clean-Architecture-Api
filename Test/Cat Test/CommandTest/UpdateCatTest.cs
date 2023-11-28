@@ -1,4 +1,4 @@
-﻿using Application.Commands.Dogs.UpdateDog;
+﻿using Application.Commands.Cats.UpdateCat;
 using Application.Dtos;
 using Domain.Models;
 using Infrastructure.Database;
@@ -8,13 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test.DogTests.CommandTest
+namespace Test.Cat_Test.CommandTest
 {
     [TestFixture]
     internal class UpdateDogTest
     {
         //Initializes the mockdatabase and handler before every test
-        private UpdateDogByIdCommandHandler _handler;
+
+        private UpdateCatByIdCommandHandler _handler;
         private MockDatabase _mockDatabase;
 
         [SetUp]
@@ -22,20 +23,20 @@ namespace Test.DogTests.CommandTest
         {
 
             _mockDatabase = new MockDatabase();
-            _handler = new UpdateDogByIdCommandHandler(_mockDatabase);
+            _handler = new UpdateCatByIdCommandHandler(_mockDatabase);
         }
 
         [Test]
         public async Task Handle_UpdatedDogInDB()
         {
             // Arrange
-            var InitDog = new Dog { Id = Guid.NewGuid(), Name = "" };
-            _mockDatabase.Dogs.Add(InitDog);
+            var InitCat = new Cat { Id = Guid.NewGuid(), Name = "" };
+            _mockDatabase.Cats.Add(InitCat);
 
             //skapar en instans av updatedog
-            var command = new UpdateDogByIdCommand(
-                updatedDog: new DogDto { Name = "UpdatedDogName" },
-                id: InitDog.Id
+            var command = new UpdateCatByIdCommand(
+                updatedCat: new CatDto { Name = "UpdatedCatName" },
+                id: InitCat.Id
             );
 
             // Act
@@ -43,15 +44,15 @@ namespace Test.DogTests.CommandTest
 
             // Assert
             Assert.NotNull(result);
-            Assert.IsInstanceOf<Dog>(result);
+            Assert.IsInstanceOf<Cat>(result);
 
             //kolla om hunden har det uppdaterade namnet 
-            Assert.That(result.Name, Is.EqualTo("UpdatedDogName"));
+            Assert.That(result.Name, Is.EqualTo("UpdatedCatName"));
 
             // kolla om hunden har uppdaterats i mocken också
-            var updatedDogInDatabase = _mockDatabase.Dogs.FirstOrDefault(dog => dog.Id == command.Id);
-            Assert.That(updatedDogInDatabase, Is.Not.Null);
-            Assert.That(updatedDogInDatabase.Name, Is.EqualTo("UpdatedDogName"));
+            var updatedCatInDatabase = _mockDatabase.Cats.FirstOrDefault(cat => cat.Id == command.Id);
+            Assert.That(updatedCatInDatabase, Is.Not.Null);
+            Assert.That(updatedCatInDatabase.Name, Is.EqualTo("UpdatedCatName"));
         }
 
     }
