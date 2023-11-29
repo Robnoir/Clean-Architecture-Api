@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos
 {
-    public class CatDto
+    public class BirdDto
     {
         public string Name { get; set; } = string.Empty;
-        public bool LikesToPlay { get; set; }
+        public bool CanFly { get; set; }
     }
 }

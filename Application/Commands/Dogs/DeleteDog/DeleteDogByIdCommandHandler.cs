@@ -23,9 +23,18 @@ namespace Application.Commands.Dogs.DeleteDog
         {
             var dogToDelete = _mockDatabase.Dogs.FirstOrDefault(dog => dog.Id == request.Id);
 
-            _mockDatabase.Dogs.Remove(dogToDelete);
+            if (dogToDelete != null)
+            {
+                _mockDatabase.Dogs.Remove(dogToDelete);
+            }
+            else
+            {
+                // Throw an exception or handle the null case as needed for your application
+                throw new InvalidOperationException("No dog with the given ID was found.");
+            }
 
             return Task.FromResult(dogToDelete);
         }
+
     }
 }
