@@ -46,8 +46,8 @@ namespace Infrastructure.Database
             new Bird { Id = Guid.NewGuid(), Name = "Adam"},
             new Bird { Id = Guid.NewGuid(), Name = "Perry"},
             new Bird { Id = Guid.NewGuid(), Name = "Tweet"},
-            new Bird { Id = new Guid("12345678-1234-5678-1234-567812345678"), Name = "TestBirdForUnitTests"},
-            new Bird { Id = new Guid("12345678-1234-5678-1234-567812345679"), Name = "TestDeleteBird" }
+            new Bird { Id = new Guid("12345678-1234-5678-1234-567812345612"), Name = "TestBirdForUnitTests"},
+            new Bird { Id = new Guid("12345678-1234-5678-1234-567812345613"), Name = "TestDeleteBird" }
         };
 
 

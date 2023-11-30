@@ -17,39 +17,30 @@ namespace Test.DogTests.CommandTest
     [TestFixture]
     internal class DeleteDogByIdTest
     {
+        private DeleteDogByIdCommandHandler _handler;
         private MockDatabase _mockDatabase;
-        private DogsController _dogscontroller;
-        private Mock<IMediator> _mediatormock;
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
-            _mediatormock = new Mock<IMediator>();
-
-            _mediatormock.Setup(m => m.Send(It.IsAny<DeleteDogByIdCommand>(), default(CancellationToken)))
-                .Returns(Task.FromResult((Dog)null));
-
             _mockDatabase = new MockDatabase();
-            _dogscontroller = new DogsController(_mediatormock.Object);
-
-
+            _handler = new DeleteDogByIdCommandHandler(_mockDatabase);
         }
 
         [Test]
-        public async Task DeleteDogById_ShouldReturnNoContentIfExistingDogIsDeleted()
+        public async Task DeleteDogById_ShouldRemoveDogIfExistingDogIsDeleted()
         {
             // Arrange
-            var existingDogId = new Guid("12345678-1234-5678-1234-567812345679"); // ID of "TestDeleteDog"
+            var existingDogId = new Guid("12345678-1234-5678-1234-567812345679"); // Adjusted to an ID that would correspond to a dog
+            var deleteCommand = new DeleteDogByIdCommand(existingDogId);
 
             // Act
-            var result = await _dogscontroller.DeleteDogbyId(existingDogId);
+            var result = await _handler.Handle(deleteCommand, new CancellationToken());
 
             // Assert
-            Assert.IsInstanceOf<NotFoundResult>(result);
+            var dogExistsAfterDeletion = _mockDatabase.Dogs.Any(d => d.Id == existingDogId);
+            Assert.IsFalse(dogExistsAfterDeletion, "Dog should be deleted from the database");
         }
-
-
-
-
     }
+
 }

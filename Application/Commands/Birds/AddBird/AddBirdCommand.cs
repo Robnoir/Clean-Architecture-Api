@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Commands.Birds.AddBird
 {
-    internal class AddBirdCommand : IRequest<Bird>
+    public class AddBirdCommand : IRequest<Bird>
     {
         public AddBirdCommand(BirdDto newBird)
         {
