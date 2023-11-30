@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Commands.Birds.AddBird
 {
-    internal class AddBirdCommandHandler : IRequestHandler<AddBirdCommand,Bird>
+    public class AddBirdCommandHandler : IRequestHandler<AddBirdCommand,Bird>
     {
         private readonly MockDatabase _mockDatabase;
 

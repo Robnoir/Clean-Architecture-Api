@@ -13,6 +13,10 @@ namespace Application.Commands.Birds.DeleteBird
     {
 
         private readonly MockDatabase _mockDatabase;
+        public DeleteBirdByIdCommandHandler(MockDatabase mockDatabase)
+        {
+            _mockDatabase = mockDatabase;
+        }
 
         public Task<Bird> Handle(DeleteBirdByIdCommand request, CancellationToken cancellationToken)
         {

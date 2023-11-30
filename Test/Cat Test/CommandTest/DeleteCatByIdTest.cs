@@ -15,41 +15,32 @@ using System.Threading.Tasks;
 namespace Test.Cat_Test.CommandTest
 {
     [TestFixture]
-    internal class DeleteDogByIdTest
+    internal class DeleteCatByIdTest
     {
+        private DeleteCatByIdCommandHandler _handler;
         private MockDatabase _mockDatabase;
-        private CatsController _catscontroller;
-        private Mock<IMediator> _mediatormock;
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
-            _mediatormock = new Mock<IMediator>();
-
-            _mediatormock.Setup(m => m.Send(It.IsAny<DeleteCatByIdCommand>(), default(CancellationToken)))
-                .Returns(Task.FromResult((Cat)null));
-
             _mockDatabase = new MockDatabase();
-            _catscontroller = new CatsController(_mediatormock.Object);
-
-
+            _handler = new DeleteCatByIdCommandHandler(_mockDatabase);
         }
 
         [Test]
-        public async Task DeleteCatById_ShouldReturnNoContentIfExistingCatIsDeleted()
+        public async Task DeleteCatById_ShouldRemoveCatIfExistingCatIsDeleted()
         {
             // Arrange
-            var existingDogId = new Guid("12345678-1234-5678-1234-567812345610"); // ID of "TestDeleteCat"
+            var existingCatId = new Guid("12345678-1234-5678-1234-567812345610"); 
+            var deleteCommand = new DeleteCatByIdCommand(existingCatId);
 
             // Act
-            var result = await _catscontroller.DeleteCatById(existingDogId);
+            var result = await _handler.Handle(deleteCommand, new CancellationToken());
 
             // Assert
-            Assert.IsInstanceOf<NotFoundResult>(result);
+            var catExistsAfterDeletion = _mockDatabase.Cats.Any(c => c.Id == existingCatId);
+            Assert.IsFalse(catExistsAfterDeletion, "Cat should be deleted from the database");
         }
-
-
-
-
     }
+
 }
