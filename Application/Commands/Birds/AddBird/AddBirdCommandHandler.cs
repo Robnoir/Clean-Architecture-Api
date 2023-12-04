@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Commands.Birds.AddBird
 {
-    public class AddBirdCommandHandler : IRequestHandler<AddBirdCommand,Bird>
+    public class AddBirdCommandHandler : IRequestHandler<AddBirdCommand, Bird>
     {
         private readonly MockDatabase _mockDatabase;
 
@@ -24,7 +24,7 @@ namespace Application.Commands.Birds.AddBird
             {
                 Id = Guid.NewGuid(),
                 Name = request.NewBird.Name
-                
+
             };
 
             _mockDatabase.Birds.Add(birdToCreate);
