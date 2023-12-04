@@ -20,8 +20,10 @@ namespace Application.Commands.Cats.UpdateCat
 
         public Task<Cat> Handle(UpdateCatByIdCommand request, CancellationToken cancellationToken)
         {
-            Cat catToUpdate = _mockDatabase.Cats.FirstOrDefault(Cat => Cat.Id == request.Id);
+            Cat catToUpdate = _mockDatabase.Cats.FirstOrDefault(Cat => Cat.Id == request.Id)!;
+
             catToUpdate.Name = request.UpdateCat.Name;
+            catToUpdate.LikesToPlay =  request.UpdateCat.LikesToPlay;
 
             return Task.FromResult(catToUpdate);
         }
