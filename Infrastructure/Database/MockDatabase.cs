@@ -34,20 +34,20 @@ namespace Infrastructure.Database
 
         public List<Cat> allCats = new()
         {
-            new Cat { Id = Guid.NewGuid(), Name = "Twix"},
-            new Cat { Id = Guid.NewGuid(), Name = "Snickers"},
-            new Cat { Id = Guid.NewGuid(), Name = "KitCat"},
-            new Cat { Id = new Guid("12345678-1234-5678-1234-567812345610"), Name = "TestCatForUnitTests"},
-            new Cat { Id = new Guid("12345678-1234-5678-1234-567812345611"), Name = "TestDeleteCat" }
+            new Cat { Id = Guid.NewGuid(), Name = "Twix", LikesToPlay = true},
+            new Cat { Id = Guid.NewGuid(), Name = "Snickers", LikesToPlay = true},  
+            new Cat { Id = Guid.NewGuid(), Name = "KitCat", LikesToPlay = true },
+            new Cat { Id = new Guid("12345678-1234-5678-1234-567812345610"), Name = "TestCatForUnitTests",LikesToPlay =true},
+            new Cat { Id = new Guid("12345678-1234-5678-1234-567812345611"), Name = "TestDeleteCat" , LikesToPlay = true}
         };
 
         public List<Bird> allBirds = new()
         {
-            new Bird { Id = Guid.NewGuid(), Name = "Adam"},
-            new Bird { Id = Guid.NewGuid(), Name = "Perry"},
-            new Bird { Id = Guid.NewGuid(), Name = "Tweet"},
-            new Bird { Id = new Guid("12345678-1234-5678-1234-567812345612"), Name = "TestBirdForUnitTests"},
-            new Bird { Id = new Guid("12345678-1234-5678-1234-567812345613"), Name = "TestDeleteBird" }
+            new Bird { Id = Guid.NewGuid(), Name = "Adam", CanFly = true },
+            new Bird { Id = Guid.NewGuid(), Name = "Perry", CanFly = true},
+            new Bird { Id = Guid.NewGuid(), Name = "Tweet", CanFly = true},
+            new Bird { Id = new Guid("12345678-1234-5678-1234-567812345612"), Name = "TestBirdForUnitTests", CanFly = true },
+            new Bird { Id = new Guid("12345678-1234-5678-1234-567812345613"), Name = "TestDeleteBird", CanFly = true}
         };
 
 
