@@ -30,7 +30,7 @@ namespace Test.BirdTests.CommandTest
             var result = await _handler.Handle(deleteCommand, new  CancellationToken());
 
             // Assert
-            var birdExistsAfterDeletion = _mockDatabase.Birds.Any(b => b.Id == existingBirdId);
+            var birdExistsAfterDeletion = _mockDatabase.Birds.Any(bird => bird.Id == existingBirdId);
 
             Assert.IsFalse(birdExistsAfterDeletion, "Bird should be deleted from the database");
 
