@@ -46,7 +46,7 @@ namespace API.Controllers.DogsController
             // Error handling
             if (!validatedId.IsValid)
             {
-                return BadRequest(validatedId.Errors.ConvertAll(error=> error.ErrorMessage));
+                return BadRequest(validatedId.Errors.ConvertAll(error => error.ErrorMessage));
             }
             // Try Catch
             try
@@ -55,11 +55,11 @@ namespace API.Controllers.DogsController
             }
             catch (Exception ex)
             {
-                
+
                 throw new Exception(ex.Message);
             }
 
-            
+
         }
 
         // Create a new dog 
@@ -67,23 +67,23 @@ namespace API.Controllers.DogsController
         [Route("addNewDog")]
         public async Task<IActionResult> AddDog([FromBody] DogDto newDog)
         {
-                // Validate dog
-                var validatedDog = _dogValidator.Validate(newDog);
-                // Error Handling
-                if (!validatedDog.IsValid)
-                {
-                    return BadRequest(validatedDog.Errors.ConvertAll(error => error.ErrorMessage));
-                }
-                // Try catch
-                try
-                {
-                    return Ok(await _mediator.Send (new AddDogCommand(newDog)));
-                }
-                catch (Exception ex)
-                {
-                    
-                    throw new Exception(ex.Message);
-                }
+            // Validate dog
+            var validatedDog = _dogValidator.Validate(newDog);
+            // Error Handling
+            if (!validatedDog.IsValid)
+            {
+                return BadRequest(validatedDog.Errors.ConvertAll(error => error.ErrorMessage));
+            }
+            // Try catch
+            try
+            {
+                return Ok(await _mediator.Send(new AddDogCommand(newDog)));
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
         }
 
         // Update a specific dog
@@ -92,12 +92,12 @@ namespace API.Controllers.DogsController
         public async Task<IActionResult> UpdateDog([FromBody] DogDto updatedDog, Guid updatedDogId)
         {
             //Validate
-            var  validatedDogId = _guidValidator.Validate(updatedDogId);
+            var validatedDogId = _guidValidator.Validate(updatedDogId);
             var dogValidator = _dogValidator.Validate(updatedDog);
             //Error Hadling
             if (!validatedDogId.IsValid)
             {
-                
+
                 return BadRequest(validatedDogId.Errors.ConvertAll(error => error.ErrorMessage));
             }
 
@@ -109,11 +109,11 @@ namespace API.Controllers.DogsController
             try
             {
                 return Ok(await _mediator.Send(new UpdateDogByIdCommand(updatedDog, updatedDogId)));
-        
+
             }
             catch (Exception ex)
             {
-                
+
                 throw new Exception(ex.Message);
             }
 
