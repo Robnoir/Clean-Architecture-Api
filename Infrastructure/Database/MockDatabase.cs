@@ -35,7 +35,7 @@ namespace Infrastructure.Database
         public List<Cat> allCats = new()
         {
             new Cat { Id = Guid.NewGuid(), Name = "Twix", LikesToPlay = true},
-            new Cat { Id = Guid.NewGuid(), Name = "Snickers", LikesToPlay = true},  
+            new Cat { Id = Guid.NewGuid(), Name = "Snickers", LikesToPlay = true},
             new Cat { Id = Guid.NewGuid(), Name = "KitCat", LikesToPlay = true },
             new Cat { Id = new Guid("12345678-1234-5678-1234-567812345610"), Name = "TestCatForUnitTests",LikesToPlay =true},
             new Cat { Id = new Guid("12345678-1234-5678-1234-567812345611"), Name = "TestDeleteCat" , LikesToPlay = true}

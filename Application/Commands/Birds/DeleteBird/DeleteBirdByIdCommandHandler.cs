@@ -35,7 +35,7 @@ namespace Application.Commands.Birds.DeleteBird
 
             return Task.FromResult(birdToDelete);
         }
-       
+
 
 
     }
