@@ -31,7 +31,7 @@ namespace Test.Cat_Test.CommandTest
         public async Task DeleteCatById_ShouldRemoveCatIfExistingCatIsDeleted()
         {
             // Arrange
-            var existingCatId = new Guid("12345678-1234-5678-1234-567812345610"); 
+            var existingCatId = new Guid("12345678-1234-5678-1234-567812345610");
             var deleteCommand = new DeleteCatByIdCommand(existingCatId);
 
             // Act

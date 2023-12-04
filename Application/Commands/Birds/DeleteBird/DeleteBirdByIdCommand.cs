@@ -11,7 +11,7 @@ namespace Application.Commands.Birds.DeleteBird
     public class DeleteBirdByIdCommand : IRequest<Bird>
     {
 
-        public DeleteBirdByIdCommand(Guid id) 
+        public DeleteBirdByIdCommand(Guid id)
         {
             Id = id;
 

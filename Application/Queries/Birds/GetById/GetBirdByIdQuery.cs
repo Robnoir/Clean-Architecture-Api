@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Application.Queries.Birds.GetById
 {
-    public  class GetBirdByIdQuery : IRequest<Bird>
+    public class GetBirdByIdQuery : IRequest<Bird>
     {
-        public GetBirdByIdQuery(Guid birdId) 
+        public GetBirdByIdQuery(Guid birdId)
         {
             Id = birdId;
         }

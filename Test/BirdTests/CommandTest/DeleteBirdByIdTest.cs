@@ -24,17 +24,17 @@ namespace Test.BirdTests.CommandTest
         {
             // Arrange
             var existingBirdId = new Guid("12345678-1234-5678-1234-567812345613");
-            var deleteCommand = new DeleteBirdByIdCommand(existingBirdId); 
+            var deleteCommand = new DeleteBirdByIdCommand(existingBirdId);
 
             // Act
-            var result = await _handler.Handle(deleteCommand, new  CancellationToken());
+            var result = await _handler.Handle(deleteCommand, new CancellationToken());
 
             // Assert
             var birdExistsAfterDeletion = _mockDatabase.Birds.Any(bird => bird.Id == existingBirdId);
 
             Assert.IsFalse(birdExistsAfterDeletion, "Bird should be deleted from the database");
 
-        
+
         }
 
     }
