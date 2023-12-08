@@ -9,9 +9,9 @@ public class GuidValidator : AbstractValidator<Guid>
         RuleFor(guid => guid)
         .NotEmpty().WithMessage("Dog Id can not be empty")
         .NotNull().WithMessage("Dog Id can not be Null");
-
+       
         
-
+        
     }
   
 

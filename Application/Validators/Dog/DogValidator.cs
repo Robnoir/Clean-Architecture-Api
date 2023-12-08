@@ -1,8 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using System.Data;
 using Application.Dtos;
-using Application.Queries.Dogs.GetAll;
-using Domain.Models;
 using FluentValidation;
 
 public class DogValidator : AbstractValidator<DogDto>

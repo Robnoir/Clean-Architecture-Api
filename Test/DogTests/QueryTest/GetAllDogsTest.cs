@@ -13,6 +13,7 @@ namespace Test.GetAllDogsTests.QueryTest
     {
         private GetAllDogsQueryHandler _handler;
         private MockDatabase _mockDatabase;
+
         [SetUp]
         public void SetUp()
         {
@@ -32,7 +33,7 @@ namespace Test.GetAllDogsTests.QueryTest
             Assert.NotNull(result);
             Assert.That(result.Count, Is.EqualTo(expectedNumberOfDogs));
 
-
+             
         }
 
     }

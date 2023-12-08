@@ -1,5 +1,7 @@
 using Application;
 using Infrastructure;
+using Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication().AddInfrastructure();
+
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("ConnectionString is null.");
+
+
+// Lägg till konfiguration för DbContext
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySQL(connectionString));
+
+
 
 var app = builder.Build();
 

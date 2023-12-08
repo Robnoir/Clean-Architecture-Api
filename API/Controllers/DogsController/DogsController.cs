@@ -5,6 +5,7 @@ using Application.Dtos;
 using Application.Queries.Dogs.GetAll;
 using Application.Queries.Dogs.GetById;
 using FluentValidation;
+using Infrastructure.Database;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
@@ -20,11 +21,15 @@ namespace API.Controllers.DogsController
         internal readonly IMediator _mediator;
         internal readonly DogValidator _dogValidator;
         internal readonly GuidValidator _guidValidator;
+        private  readonly AppDbContext _appDbContext;
 
-        public DogsController(IMediator mediator, DogValidator dogValidator)
+        public DogsController(IMediator mediator, DogValidator dogValidator,AppDbContext appDbContext,GuidValidator guidvalidator)
         {
             _mediator = mediator;
             _dogValidator = dogValidator;
+            _appDbContext = appDbContext;
+            _guidValidator = guidvalidator;
+
         }
 
         // Get all dogs from database
@@ -32,7 +37,7 @@ namespace API.Controllers.DogsController
         [Route("getAllDogs")]
         public async Task<IActionResult> GetAllDogs()
         {
-            return Ok(await _mediator.Send(new GetAllDogsQuery()));
+            return Ok(await _mediator.Send(new GetAllDogsQuery())); 
             //return Ok("GET ALL DOGS");
         }
 
@@ -124,14 +129,27 @@ namespace API.Controllers.DogsController
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDogbyId(Guid id)
         {
+            //Validate
             var dog = await _mediator.Send(new DeleteDogByIdCommand(id));
+            var validationResult = _guidValidator.Validate(id);
+            
+            //Errorhandling
 
-            if (dog != null)
+            if (!validationResult.IsValid)
             {
-                return NoContent();
+                return BadRequest(validationResult.Errors.Select(error => error.ErrorMessage));
             }
 
-            return NotFound();
+            try
+            {
+                return Ok(await _mediator.Send(new DeleteDogByIdCommand(id)));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+           
         }
 
 
