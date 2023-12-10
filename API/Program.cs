@@ -8,6 +8,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics.SymbolStore;
 using System.Text;
+using MediatR;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,16 +21,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddApplication().AddInfrastructure();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-
-
-
-
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("ConnectionString is null.");
 
 
-
+var configuration = builder.Configuration;
+builder.Services.AddInfrastructure(configuration);
 
 // Authentication services
 

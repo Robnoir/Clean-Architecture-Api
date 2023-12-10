@@ -16,6 +16,11 @@ namespace Infrastructure.Services
     {
         private readonly IConfiguration _configuration;
 
+        public CreateTokenService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public string CreateToken(User user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
