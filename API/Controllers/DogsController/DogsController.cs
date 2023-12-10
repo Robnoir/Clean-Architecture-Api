@@ -21,9 +21,9 @@ namespace API.Controllers.DogsController
         internal readonly IMediator _mediator;
         internal readonly DogValidator _dogValidator;
         internal readonly GuidValidator _guidValidator;
-        private  readonly AppDbContext _appDbContext;
+        private readonly AppDbContext _appDbContext;
 
-        public DogsController(IMediator mediator, DogValidator dogValidator,AppDbContext appDbContext,GuidValidator guidvalidator)
+        public DogsController(IMediator mediator, DogValidator dogValidator, AppDbContext appDbContext, GuidValidator guidvalidator)
         {
             _mediator = mediator;
             _dogValidator = dogValidator;
@@ -37,7 +37,7 @@ namespace API.Controllers.DogsController
         [Route("getAllDogs")]
         public async Task<IActionResult> GetAllDogs()
         {
-            return Ok(await _mediator.Send(new GetAllDogsQuery())); 
+            return Ok(await _mediator.Send(new GetAllDogsQuery()));
             //return Ok("GET ALL DOGS");
         }
 
@@ -132,7 +132,7 @@ namespace API.Controllers.DogsController
             //Validate
             var dog = await _mediator.Send(new DeleteDogByIdCommand(id));
             var validationResult = _guidValidator.Validate(id);
-            
+
             //Errorhandling
 
             if (!validationResult.IsValid)
@@ -149,7 +149,7 @@ namespace API.Controllers.DogsController
                 throw new Exception(ex.Message);
             }
 
-           
+
         }
 
 

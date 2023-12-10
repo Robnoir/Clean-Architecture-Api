@@ -22,6 +22,11 @@ namespace Infrastructure.Database
             set { allBirds = value; }
         }
 
+        public List<User> Users
+        {
+            get { return allUsers; }
+            set { allUsers = value; }
+        }
 
         public List<Dog> allDogs = new()
         {
@@ -49,6 +54,21 @@ namespace Infrastructure.Database
             new Bird { Id = new Guid("12345678-1234-5678-1234-567812345612"), Name = "TestBirdForUnitTests", CanFly = true },
             new Bird { Id = new Guid("12345678-1234-5678-1234-567812345613"), Name = "TestDeleteBird", CanFly = true}
         };
+
+    
+
+        
+        private List<User> allUsers = new()
+        {
+            new User { Id = Guid.NewGuid(), Username = "john_doe", Password = "Password1" },
+            new User { Id = Guid.NewGuid(), Username = "Rob", Password = "Rob123" },
+            // Add more mock users as needed. The PasswordHash should be a hashed version of the password.
+        };
+
+
+
+
+
 
 
     }

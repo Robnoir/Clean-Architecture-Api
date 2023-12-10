@@ -2,6 +2,7 @@
 using Domain.Models;
 using Infrastructure.Database;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries.Dogs
 {
@@ -13,7 +14,7 @@ namespace Application.Queries.Dogs
         {
             _appDbContext = appDbContext;
         }
-        public  async Task<List<Dog>> Handle(GetAllDogsQuery request, CancellationToken cancellationToken)
+        public async Task<List<Dog>> Handle(GetAllDogsQuery request, CancellationToken cancellationToken)
         {
             //List<Dog> allDogsFromMockDatabase = _appDbContext.Dogs;
             // return Task.FromResult(allDogsFromMockDatabase);

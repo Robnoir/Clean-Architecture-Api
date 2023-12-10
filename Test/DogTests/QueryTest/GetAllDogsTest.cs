@@ -33,7 +33,7 @@ namespace Test.GetAllDogsTests.QueryTest
             Assert.NotNull(result);
             Assert.That(result.Count, Is.EqualTo(expectedNumberOfDogs));
 
-             
+
         }
 
     }

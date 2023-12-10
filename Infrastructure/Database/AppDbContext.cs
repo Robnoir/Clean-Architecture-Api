@@ -12,7 +12,7 @@ namespace Infrastructure.Database
     public class AppDbContext : DbContext
     {
         private readonly IConfiguration _configuration;
-        public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base (options)
+        public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base(options)
         {
             _configuration = configuration;
         }
@@ -20,6 +20,7 @@ namespace Infrastructure.Database
         public DbSet<Bird> Birds { get; set; }
         public DbSet<Cat> Cats { get; set; }
         public DbSet<Dog> Dogs { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -46,6 +47,13 @@ namespace Infrastructure.Database
             new Dog { Id = Guid.NewGuid(), Name = "Patrik" },
             new Dog { Id = Guid.NewGuid(), Name = "Alfred" }
             );
+
+            //Seed Data 
+            modelBuilder.Entity<User>().HasData(
+            new User { Id = Guid.NewGuid(), Username = "john_doe", Password = "Password1" },
+            new User { Id = Guid.NewGuid(), Username = "Rob", Password = "Rob123" }
+                );
+
 
             base.OnModelCreating(modelBuilder);
         }

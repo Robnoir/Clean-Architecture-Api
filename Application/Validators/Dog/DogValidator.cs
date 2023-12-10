@@ -10,6 +10,6 @@ public class DogValidator : AbstractValidator<DogDto>
         .NotNull().WithMessage("Dog name can not be Null");
 
     }
-  
+
 
 }
