@@ -20,7 +20,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+// MediatR registration
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("ConnectionString is null.");
 
@@ -46,7 +46,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddScoped<CreateTokenService>();
 
-// Lägg till konfiguration för DbContext
+// Lï¿½gg till konfiguration fï¿½r DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySQL(connectionString));
 
