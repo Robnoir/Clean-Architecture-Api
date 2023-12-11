@@ -16,7 +16,7 @@ namespace Infrastructure
                          new MySqlServerVersion(new Version(8, 2, 0)));
             });
             return services;
-            
+
         }
 
     }
