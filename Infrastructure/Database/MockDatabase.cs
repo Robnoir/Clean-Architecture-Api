@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using System.Security;
+using Domain.Models;
 
 namespace Infrastructure.Database
 {
@@ -21,7 +22,17 @@ namespace Infrastructure.Database
             get { return allBirds; }
             set { allBirds = value; }
         }
+        public List<User> Users
+        {
+            get { return allUsers;}
+            set { allUsers = value; }
+        }
 
+        public List<User> allUsers = new()
+        {
+            new User {Id = Guid.NewGuid(), Username = "rob", Email = "rob@gmail.com", PasswordHash = "Rob123" },
+            new User {Id = Guid.NewGuid(),Username = "stefan", Email = "stefan@gmail.com", PasswordHash = "Stefan123"}
+        };
 
         public List<Dog> allDogs = new()
         {
