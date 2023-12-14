@@ -17,14 +17,16 @@ namespace API.Controllers.DogsController
     [ApiController]
     public class DogsController : ControllerBase
     {
+
         internal readonly IMediator _mediator;
         internal readonly DogValidator _dogValidator;
         internal readonly GuidValidator _guidValidator;
 
-        public DogsController(IMediator mediator, DogValidator dogValidator)
+        public DogsController(IMediator mediator, DogValidator dogValidator, GuidValidator guidvalidator)
         {
             _mediator = mediator;
             _dogValidator = dogValidator;
+            _guidValidator = guidvalidator;
         }
 
         // Get all dogs from database
@@ -33,7 +35,7 @@ namespace API.Controllers.DogsController
         public async Task<IActionResult> GetAllDogs()
         {
             return Ok(await _mediator.Send(new GetAllDogsQuery()));
-            //return Ok("GET ALL DOGS");
+            // return Ok("GET ALL DOGS");
         }
 
         // Get a dog by Id
@@ -120,7 +122,7 @@ namespace API.Controllers.DogsController
         }
 
 
-
+            // Delete specific dog
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDogbyId(Guid id)
         {

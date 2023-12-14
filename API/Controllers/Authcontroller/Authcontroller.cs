@@ -6,7 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 
-
 namespace API.Controllers
 {
     // Defines the route as "api/[controller]" and sets this class as an API controller.
@@ -43,7 +42,7 @@ namespace API.Controllers
 
         // Endpoint for logging in a user.
         [HttpPost("login")]
-        public ActionResult<User> Login(UserDto request)
+        public ActionResult<string> Login(UserDto request)
         {
             // Checks if the username exists. Returns an error if not found.
             if (user.Username != request.Username)
@@ -54,7 +53,7 @@ namespace API.Controllers
             // Verifies the password. If incorrect, returns an error.
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
-                return BadRequest("wrong password");
+                return BadRequest("Wrong password");
             }
 
             // Creates a JWT token for the authenticated user.
@@ -67,20 +66,26 @@ namespace API.Controllers
         // Helper method to create a JWT token.
         private string CreateToken(User user)
         {
-            // just the username is used as a claim.
+            // Just the username is used as a claim.
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username)
-
             };
 
-            // Fetches the secret key from configuration and creates security key.
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
+            // Fetches the secret key from configuration. Secret key can't be null.
+            var secretKey = _configuration["JwtSettings:SecretKey"];
+            if (secretKey == null)
+            {
+                throw new InvalidOperationException("Secret key must not be null.");
+            }
+
+            // Creates security key using the fetched secret key.
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
             // Creates signing credentials using the security key.
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            // Creates the JWT token with the specified issuer, audience, claims, expirationdate, and credentials
+            // Creates the JWT token with the specified issuer, audience, claims, expiration date, and credentials.
             var token = new JwtSecurityToken(
                 issuer: _configuration["JwtSettings:Issuer"],
                 audience: _configuration["JwtSettings:Audience"],
