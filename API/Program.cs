@@ -1,21 +1,26 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//test
-
 // Add services to the container.
+builder.Services.AddControllers(options =>
+{
+    // Apply a global authorization policy
+    var policy = new AuthorizationPolicyBuilder()
+                     .RequireAuthenticatedUser()
+                     .Build();
+    options.Filters.Add(new AuthorizeFilter(policy));
+});
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Add Swagger/OpenAPI support
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(SwaggerConfig =>
 {
     // Creating a Swagger document.
@@ -33,7 +38,8 @@ builder.Services.AddSwaggerGen(SwaggerConfig =>
         Description = "JWT Authorization header using the Bearer scheme."
     });
 
-    // Telling SwaggerUI that the API uses Bearer(JWT) authentication so i don't need to add the Bearer infront of pasted token
+    // Telling SwaggerUI that the API uses Bearer(JWT) authentication
+    // so you don't need to add the Bearer in front of the pasted token.
     SwaggerConfig.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -50,10 +56,10 @@ builder.Services.AddSwaggerGen(SwaggerConfig =>
     });
 });
 
-
+// Add application and infrastructure services
 builder.Services.AddApplication().AddInfrastructure();
 
-// Configuring JWT Bearer authentication.
+// Configure JWT Bearer authentication.
 builder.Services.AddAuthentication(options =>
 {
     // Setting the schemes to JWT Bearer.
@@ -65,7 +71,6 @@ builder.Services.AddAuthentication(options =>
     // Setting the parameters for validating incoming JWT tokens.
     options.TokenValidationParameters = new TokenValidationParameters
     {
-
         ValidateIssuerSigningKey = true,
         ValidateIssuer = true,
         ValidateAudience = true,
@@ -89,7 +94,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();
