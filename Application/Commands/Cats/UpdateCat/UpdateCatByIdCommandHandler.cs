@@ -11,16 +11,16 @@ namespace Application.Commands.Cats.UpdateCat
 {
     public class UpdateCatByIdCommandHandler : IRequestHandler<UpdateCatByIdCommand, Cat>
     {
-        private readonly MockDatabase _mockDatabase;
+        private readonly RealDatabase _realDatabase;
 
-        public UpdateCatByIdCommandHandler(MockDatabase mockDatabase)
+        public UpdateCatByIdCommandHandler(RealDatabase realDatabase)
         {
-            _mockDatabase = mockDatabase;
+            _realDatabase = realDatabase;
         }
 
         public Task<Cat> Handle(UpdateCatByIdCommand request, CancellationToken cancellationToken)
         {
-            Cat catToUpdate = _mockDatabase.Cats.FirstOrDefault(Cat => Cat.Id == request.Id)!;
+            Cat catToUpdate = _realDatabase.Cats.FirstOrDefault(Cat => Cat.Id == request.Id)!;
 
             catToUpdate.Name = request.UpdateCat.Name;
             catToUpdate.LikesToPlay = request.UpdateCat.LikesToPlay;

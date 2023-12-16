@@ -10,6 +10,6 @@ public class DeleteUserByIdCommand : IRequest<User>
         Id = id;
     }
 
-    public Guid Id {get;}
+    public Guid Id { get; }
 
 }

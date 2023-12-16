@@ -6,21 +6,21 @@ namespace Application;
 
 public class DeleteUserByIdCommandHandle : IRequestHandler<DeleteUserByIdCommand, User>
 {
-    private readonly MockDatabase _mockDatabase;
+    private readonly RealDatabase _realDatabase;
 
-    public DeleteUserByIdCommandHandle(MockDatabase mockDatabase)
+    public DeleteUserByIdCommandHandle(RealDatabase realDatabase)
     {
-        _mockDatabase = mockDatabase;
+        _realDatabase = realDatabase;
 
     }
 
     public Task<User> Handle(DeleteUserByIdCommand request, CancellationToken cancellationToken)
     {
-        var userToDelete = _mockDatabase.Users.FirstOrDefault(user => user.Id == request.Id);
+        var userToDelete = _realDatabase.Users.FirstOrDefault(user => user.Id == request.Id);
 
         if (userToDelete != null)
         {
-            _mockDatabase.Users.Remove(userToDelete);
+            _realDatabase.Users.Remove(userToDelete);
         }
         else
         {

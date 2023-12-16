@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Domain;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
@@ -14,5 +15,7 @@ namespace Application
 
             return services;
         }
+
+
     }
 }

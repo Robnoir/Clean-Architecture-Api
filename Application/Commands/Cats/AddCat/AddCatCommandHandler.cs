@@ -11,11 +11,11 @@ namespace Application.Commands.Cats.AddCat
 {
     public class AddCatCommandHandler : IRequestHandler<AddCatCommand, Cat>
     {
-        private readonly MockDatabase _mockDatabase;
+        private readonly RealDatabase _realDatabase;
 
-        public AddCatCommandHandler(MockDatabase mockDatabase)
+        public AddCatCommandHandler(RealDatabase realDatabase)
         {
-            _mockDatabase = mockDatabase;
+            _realDatabase = realDatabase;
 
         }
 
@@ -26,7 +26,7 @@ namespace Application.Commands.Cats.AddCat
                 Id = Guid.NewGuid(),
                 Name = request.NewCat.Name
             };
-            _mockDatabase.Cats.Add(CatToCreate);
+            _realDatabase.Cats.Add(CatToCreate);
             return Task.FromResult(CatToCreate);
         }
 

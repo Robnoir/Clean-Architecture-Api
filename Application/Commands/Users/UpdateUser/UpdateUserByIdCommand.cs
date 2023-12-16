@@ -6,15 +6,12 @@ namespace Application;
 
 public class UpdateUserByIdCommand : IRequest<User>
 {
-    public UpdateUserByIdCommand(UserDto updateUser, Guid id)
+    public UserDto UpdateUserDto { get; }
+    public Guid UserId { get; }
+
+    public UpdateUserByIdCommand(UserDto updateUserDto, Guid userId)
     {
-        UpdateUser = updateUser;
-        Id = id;
-
+        UpdateUserDto = updateUserDto;
+        UserId = userId;
     }
-
-    public UserDto UpdateUser {get;}
-    public Guid Id {get;}
-    
-
 }
