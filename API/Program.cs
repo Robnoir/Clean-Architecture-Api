@@ -19,6 +19,8 @@ builder.Services.AddControllers(options =>
     options.Filters.Add(new AuthorizeFilter(policy));
 });
 
+
+
 // Add Swagger/OpenAPI support
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(SwaggerConfig =>
@@ -37,6 +39,10 @@ builder.Services.AddSwaggerGen(SwaggerConfig =>
         In = ParameterLocation.Header,
         Description = "JWT Authorization header using the Bearer scheme."
     });
+
+
+
+    
 
     // Telling SwaggerUI that the API uses Bearer(JWT) authentication
     // so you don't need to add the Bearer in front of the pasted token.

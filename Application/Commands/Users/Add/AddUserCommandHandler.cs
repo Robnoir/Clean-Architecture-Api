@@ -6,11 +6,12 @@ namespace Application;
 
 public class AddUserCommandHandler : IRequestHandler<AddUserCommand, User>
 {
-    private readonly MockDatabase _mockdatabase;
- public AddUserCommandHandler(MockDatabase mockDatabase)
- {
-    _mockdatabase = mockDatabase;
- }
+    
+    private readonly RealDatabase _realdatabase;
+    public AddUserCommandHandler(RealDatabase realDatabase)
+    {
+        _realdatabase = realDatabase;
+    }
     public Task<User> Handle(AddUserCommand request, CancellationToken cancellationToken)
     {
         User userToCreate = new()
@@ -19,12 +20,12 @@ public class AddUserCommandHandler : IRequestHandler<AddUserCommand, User>
             Username = request.NewUser.Username
         };
 
-        _mockdatabase.Users.Add(userToCreate);
+        _realdatabase.Users.Add(userToCreate);
 
         return Task.FromResult(userToCreate);
     }
 
-   
+
 
 
 

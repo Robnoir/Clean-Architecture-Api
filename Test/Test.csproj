@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <Folder Include="Cat Test\QueryTest\" />
+    <Folder Include="User Tests/QueryTests/" />
   </ItemGroup>
 
 </Project>

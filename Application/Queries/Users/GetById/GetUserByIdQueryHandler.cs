@@ -16,7 +16,7 @@ public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User>
 
     public Task<User> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
-        User wantedUser = _mockDatabase.Users.FirstOrDefault(user =>user.Id == request.Id)!;
+        User wantedUser = _mockDatabase.Users.FirstOrDefault(user => user.Id == request.Id)!;
         return Task.FromResult(wantedUser);
     }
 

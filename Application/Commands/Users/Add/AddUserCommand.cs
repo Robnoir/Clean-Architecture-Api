@@ -11,6 +11,6 @@ public class AddUserCommand : IRequest<User>
     {
         NewUser = newUser;
     }
-    public UserDto NewUser {get;}
+    public UserDto NewUser { get; }
 
 }

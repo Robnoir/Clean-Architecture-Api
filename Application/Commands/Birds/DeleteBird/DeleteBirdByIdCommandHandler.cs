@@ -12,19 +12,19 @@ namespace Application.Commands.Birds.DeleteBird
     public class DeleteBirdByIdCommandHandler : IRequestHandler<DeleteBirdByIdCommand, Bird>
     {
 
-        private readonly MockDatabase _mockDatabase;
-        public DeleteBirdByIdCommandHandler(MockDatabase mockDatabase)
+        private readonly RealDatabase _realDatabase;
+        public DeleteBirdByIdCommandHandler(RealDatabase realDatabase)
         {
-            _mockDatabase = mockDatabase;
+            _realDatabase = realDatabase;
         }
 
         public Task<Bird> Handle(DeleteBirdByIdCommand request, CancellationToken cancellationToken)
         {
-            var birdToDelete = _mockDatabase.Birds.FirstOrDefault(bird => bird.Id == request.Id);
+            var birdToDelete = _realDatabase.Birds.FirstOrDefault(bird => bird.Id == request.Id);
 
             if (birdToDelete != null)
             {
-                _mockDatabase.Birds.Remove(birdToDelete);
+                _realDatabase.Birds.Remove(birdToDelete);
             }
             else
             {

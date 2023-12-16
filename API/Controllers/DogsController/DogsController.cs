@@ -6,6 +6,7 @@ using Application.Queries.Dogs.GetAll;
 using Application.Queries.Dogs.GetById;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 
@@ -30,12 +31,13 @@ namespace API.Controllers.DogsController
         }
 
         // Get all dogs from database
+        [AllowAnonymous]
         [HttpGet]
         [Route("getAllDogs")]
         public async Task<IActionResult> GetAllDogs()
         {
             return Ok(await _mediator.Send(new GetAllDogsQuery()));
-            // return Ok("GET ALL DOGS");
+            // return Ok("GET ALL DOGS");   
         }
 
         // Get a dog by Id

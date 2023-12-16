@@ -10,6 +10,6 @@ public class GetUserByIdQuery : IRequest<User>
         Id = userId;
     }
 
-    public Guid Id {get;}
+    public Guid Id { get; }
 
 }

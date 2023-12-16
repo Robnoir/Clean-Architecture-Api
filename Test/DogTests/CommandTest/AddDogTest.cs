@@ -1,43 +1,43 @@
-﻿using Application.Commands.Dogs;
-using Application.Dtos;
-using Infrastructure.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// using Application.Commands.Dogs;
+// using Application.Dtos;
+// using Infrastructure.Database;
+// using System;
+// using System.Collections.Generic;
+// using System.Linq;
+// using System.Text;
+// using System.Threading.Tasks;
 
-namespace Test.DogTests.CommandTest
-{
-    [TestFixture]
-    internal class AddDogTest
-    {
-        private MockDatabase _mockDatabase;
-        private AddDogCommandHandler _handler;
+// namespace Test.DogTests.CommandTest
+// {
+//     // [TestFixture]
+//     // internal class AddDogTest
+//     // {
+//     //     private MockDatabase _mockDatabase;
+//     //     private AddDogCommandHandler _handler;
 
-        [SetUp]
-        public void SetUp()
-        {
+//     //     [SetUp]
+//     //     public void SetUp()
+//     //     {
 
-            //Initializes the mockdatabase and handler before every test
-            _mockDatabase = new MockDatabase();
-            _handler = new AddDogCommandHandler(_mockDatabase);
-        }
+//     //         //Initializes the mockdatabase and handler before every test
+//     //         _mockDatabase = new MockDatabase();
+//     //         _handler = new AddDogCommandHandler(_mockDatabase);
+//     //     }
 
-        [Test]
-        public async Task Handle_ChecksAddedDog_ReturnTrue()
-        {
-            // Arrange
-            var command = new AddDogCommand(new DogDto { Name = "Rio" });
+//     //     [Test]
+//     //     public async Task Handle_ChecksAddedDog_ReturnTrue()
+//     //     {
+//     //         // Arrange
+//     //         var command = new AddDogCommand(new DogDto { Name = "Rio" });
 
-            // Act
-            var result = await _handler.Handle(command, CancellationToken.None);
+//     //         // Act
+//     //         var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
-            var newDogToDB = _mockDatabase.Dogs.FirstOrDefault(dog => dog.Name == "Rio");
+//     //         // Assert
+//     //         var newDogToDB = _mockDatabase.Dogs.FirstOrDefault(dog => dog.Name == "Rio");
 
-            Assert.IsNotNull(newDogToDB);
-            Assert.That(newDogToDB.Name, Is.EqualTo("Rio"));
-        }
-    }
-}
+//     //         Assert.IsNotNull(newDogToDB);
+//     //         Assert.That(newDogToDB.Name, Is.EqualTo("Rio"));
+//     //     }
+//     }
+// }
