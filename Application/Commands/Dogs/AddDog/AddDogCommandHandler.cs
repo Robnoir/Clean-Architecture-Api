@@ -9,7 +9,7 @@ namespace Application.Commands.Dogs
     {
         private readonly RealDatabase _realDatabase;
 
-        public AddDogCommandHandler (RealDatabase realDatabase)
+        public AddDogCommandHandler(RealDatabase realDatabase)
         {
             _realDatabase = realDatabase;
         }

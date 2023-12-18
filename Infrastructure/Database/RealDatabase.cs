@@ -9,15 +9,15 @@ namespace Infrastructure.Database
     public class RealDatabase : DbContext
     {
 
-        
+
         public RealDatabase() { }
-        public RealDatabase(DbContextOptions<RealDatabase> options) : base(options) {}
-      
+        public RealDatabase(DbContextOptions<RealDatabase> options) : base(options) { }
+
 
         public virtual DbSet<Dog> Dogs { get; set; }
         public virtual DbSet<Cat> Cats { get; set; }
         public virtual DbSet<Bird> Birds { get; set; }
-        public virtual DbSet<User> Users {get; set;}
+        public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
