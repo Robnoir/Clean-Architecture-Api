@@ -42,7 +42,7 @@ builder.Services.AddSwaggerGen(SwaggerConfig =>
 
 
 
-    
+
 
     // Telling SwaggerUI that the API uses Bearer(JWT) authentication
     // so you don't need to add the Bearer in front of the pasted token.

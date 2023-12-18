@@ -11,8 +11,8 @@ public class UserValidator : AbstractValidator<User>
     {
         RuleFor(user => user.Id)
             .NotEmpty().WithMessage("User Id cannot be empty");
-            
-            
+
+
 
         RuleFor(user => user.Username)
             .NotEmpty().WithMessage("Username cannot be empty")
@@ -20,11 +20,11 @@ public class UserValidator : AbstractValidator<User>
             .MinimumLength(5).WithMessage("Username minimum lenth 5 letters")
             .Matches("^[a-zA-Z0-9_-]+$").WithMessage("Username can only contain letters, numbers, underscores, and hyphens.");
 
-       RuleFor(user => user.Email)
-          .NotEmpty().WithMessage("Email can not be empty")
-          .MaximumLength(20).WithMessage("Email can not be more than 20 letters long")
-          .MinimumLength(5).WithMessage("Email Minimum length is 5 letters");
-          
+        RuleFor(user => user.Email)
+           .NotEmpty().WithMessage("Email can not be empty")
+           .MaximumLength(20).WithMessage("Email can not be more than 20 letters long")
+           .MinimumLength(5).WithMessage("Email Minimum length is 5 letters");
+
 
         RuleFor(user => user.PasswordHash)
             .NotEmpty().WithMessage("Password can not be empty")

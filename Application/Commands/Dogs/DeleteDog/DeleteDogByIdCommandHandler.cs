@@ -13,7 +13,7 @@ namespace Application.Commands.Dogs.DeleteDog
     {
         private readonly RealDatabase _realDatabase;
 
-        public DeleteDogByIdCommandHandler (RealDatabase realDatabase)
+        public DeleteDogByIdCommandHandler(RealDatabase realDatabase)
         {
             _realDatabase = realDatabase;
         }

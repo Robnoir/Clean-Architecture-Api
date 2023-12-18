@@ -6,7 +6,7 @@ namespace Application;
 
 public class AddUserCommandHandler : IRequestHandler<AddUserCommand, User>
 {
-    
+
     private readonly RealDatabase _realdatabase;
     public AddUserCommandHandler(RealDatabase realDatabase)
     {

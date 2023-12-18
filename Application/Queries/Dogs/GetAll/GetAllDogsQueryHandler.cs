@@ -8,7 +8,7 @@ namespace Application.Queries.Dogs
 {
     public class GetAllDogsQueryHandler : IRequestHandler<GetAllDogsQuery, List<Dog>>
     {
-       private readonly IDogRepository _dogRepository;
+        private readonly IDogRepository _dogRepository;
 
         public GetAllDogsQueryHandler(IDogRepository dogRepository)
         {

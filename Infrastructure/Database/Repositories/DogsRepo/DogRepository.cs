@@ -21,7 +21,7 @@ public class DogRepository : IDogRepository
         throw new NotImplementedException();
     }
 
-    public  async Task<List<Dog>> GetAllDogsAsync()
+    public async Task<List<Dog>> GetAllDogsAsync()
     {
         return await _realDatabase.Dogs.ToListAsync();
     }
