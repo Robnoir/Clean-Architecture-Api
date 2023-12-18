@@ -1,15 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
 using Application.Dtos;
+using MediatR;
+using Application;
+using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
-using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Application;
-using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -83,85 +81,8 @@ namespace API.Controllers
             // Returns the generated token.
             return Ok(token);
         }
-        // ------------------------------------------------------------------------------------------------------
-        // Get all users
-        [HttpGet]
-        [Route("getAllUsers")]
-        public async Task<IActionResult> GetAllUsers()
-        {
-            return Ok(await _mediator.Send(new GetAllUsersQuery()));
-        }
-        // ------------------------------------------------------------------------------------------------------
-        // Get User by Id
-        [HttpGet]
-        [Route("getUserById")]
-        public async Task<IActionResult> GetUserById(Guid UserId)
-        {
-            var validatedId = _guidValidator.Validate(UserId);
-            if (!validatedId.IsValid)
-            {
-                return BadRequest(validatedId.Errors.ConvertAll(error => error.ErrorMessage));
-            }
 
-            try
-            {
-                return Ok(await _mediator.Send(new GetUserByIdQuery(UserId)));
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-        // ------------------------------------------------------------------------------------------------------
-        // Update Specific User
-        [HttpPut]
-        [Route("updateUser/{updatedUserId}")]
-        public async Task<IActionResult> UpdateUser([FromBody] UserDto updatedUserDto, Guid updatedUserId)
-        {
-            try
-            {
-                var command = new UpdateUserByIdCommand(updatedUserDto, updatedUserId);
-                var result = await _mediator.Send(command);
-
-                if (result == null)
-                {
-                    return NotFound("User not found.");
-                }
-
-                return Ok(result);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                // Handle not found exception
-                return NotFound(ex.Message);
-            }
-            catch (ValidationException ex)
-            {
-                // Handle validation exceptions
-                return BadRequest(ex.Errors);
-            }
-            catch (Exception ex)
-            {
-                // Handle any other unexpected exceptions
-                return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred: {ex.Message}");
-            }
-        }
-
-        // ------------------------------------------------------------------------------------------------------
-        // Delete user by Id
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserById(Guid id)
-        {
-            var user = await _mediator.Send(new DeleteUserByIdCommand(id));
-
-            if (user != null)
-            {
-                return NoContent();
-            }
-            return NotFound();
-        }
-        // ------------------------------------------------------------------------------------------------------
-        // Helper method to create a JWT token.
+        //Helper method to create a JWT token.
         private string CreateToken(User user)
         {
             // Just the username is used as a claim.
