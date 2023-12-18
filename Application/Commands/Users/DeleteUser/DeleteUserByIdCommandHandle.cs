@@ -1,36 +1,35 @@
 ﻿using Domain.Models;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.UserRepo;
 using MediatR;
 
 namespace Application;
 
 public class DeleteUserByIdCommandHandle : IRequestHandler<DeleteUserByIdCommand, User>
 {
-    private readonly RealDatabase _realDatabase;
+    private readonly IUserRepository _userRepository;
 
-    public DeleteUserByIdCommandHandle(RealDatabase realDatabase)
+    public DeleteUserByIdCommandHandle(IUserRepository userRepository)
     {
-        _realDatabase = realDatabase;
+        _userRepository = userRepository;
 
     }
 
-    public Task<User> Handle(DeleteUserByIdCommand request, CancellationToken cancellationToken)
+    public async Task<User> Handle(DeleteUserByIdCommand request, CancellationToken cancellationToken)
     {
-        var userToDelete = _realDatabase.Users.FirstOrDefault(user => user.Id == request.Id);
+        User userToDelete = await _userRepository.GetUserByIdAsync(request.Id);
 
-        if (userToDelete != null)
+        if (userToDelete == null)
         {
-            _realDatabase.Users.Remove(userToDelete);
-        }
-        else
-        {
-            throw new InvalidOperationException("No user with given Id was found");
+            throw new InvalidOperationException("No user with the given id was found");
+
         }
 
-        return Task.FromResult(userToDelete);
+        await _userRepository.DeleteUserAsync(request.Id);
+
+        return (userToDelete);
+
+
+
     }
-
-
-
-
 }

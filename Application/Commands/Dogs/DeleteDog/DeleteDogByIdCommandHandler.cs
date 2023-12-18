@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Infrastructure;
 using Infrastructure.Database;
 using MediatR;
 using System;
@@ -11,29 +12,26 @@ namespace Application.Commands.Dogs.DeleteDog
 {
     public class DeleteDogByIdCommandHandler : IRequestHandler<DeleteDogByIdCommand, Dog>
     {
-        private readonly RealDatabase _realDatabase;
+        private readonly IDogRepository _dogRepository;
 
-        public DeleteDogByIdCommandHandler(RealDatabase realDatabase)
+        public DeleteDogByIdCommandHandler(IDogRepository dogRepository)
         {
-            _realDatabase = realDatabase;
+            _dogRepository = dogRepository;
         }
 
 
-        public Task<Dog> Handle(DeleteDogByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Dog> Handle(DeleteDogByIdCommand request, CancellationToken cancellationToken)
         {
-            var dogToDelete = _realDatabase.Dogs.FirstOrDefault(dog => dog.Id == request.Id);
-
-            if (dogToDelete != null)
+            Dog dogTodelete = await _dogRepository.GetByIdAsync(request.Id);
+            if (dogTodelete == null)
             {
-                _realDatabase.Dogs.Remove(dogToDelete);
-            }
-            else
-            {
-                // Throw an exception or handle the null case as needed for your application
-                throw new InvalidOperationException("No dog with the given ID was found.");
+                throw new InvalidOperationException("No dog with the given Id was found");
             }
 
-            return Task.FromResult(dogToDelete);
+            await _dogRepository.DeleteAsync(request.Id);
+
+            return (dogTodelete);
+
         }
 
     }

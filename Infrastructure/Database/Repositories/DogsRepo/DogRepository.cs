@@ -11,28 +11,40 @@ public class DogRepository : IDogRepository
 
     private readonly RealDatabase _realDatabase;
 
-    public Task<Dog> AddAsync(Dog dogToCreate)
+    public DogRepository(RealDatabase realDatabase)
     {
-        throw new NotImplementedException();
+        _realDatabase = realDatabase;
     }
-
-    public Task DeleteAsync(Guid dogId)
+    public async Task<Dog> AddAsync(Dog dogToCreate)
     {
-        throw new NotImplementedException();
-    }
+        _realDatabase.Dogs.Add(dogToCreate);
+        _realDatabase.SaveChanges();
+        return await Task.FromResult(dogToCreate);
 
+
+    }
+    public async Task DeleteAsync(Guid dogId)
+    {
+        var DeleteDogId = await _realDatabase.Dogs.FindAsync(dogId);
+
+        if (DeleteDogId != null)
+        {
+            _realDatabase.Dogs.Remove(DeleteDogId);
+            await _realDatabase.SaveChangesAsync();
+        }
+        
+    }
     public async Task<List<Dog>> GetAllDogsAsync()
     {
         return await _realDatabase.Dogs.ToListAsync();
     }
-
-    public Task<Dog> GetByIdAsync(Guid dogId)
+    public async Task<Dog> GetByIdAsync(Guid dogId)
     {
-        throw new NotImplementedException();
+        return await _realDatabase.Dogs.FindAsync(dogId);
     }
-
-    public Task UpdateAsync(Dog dog)
+    public async Task UpdateAsync(Dog dog)
     {
-        throw new NotImplementedException();
+        _realDatabase.Dogs.Update(dog);
+        await _realDatabase.SaveChangesAsync();
     }
 }

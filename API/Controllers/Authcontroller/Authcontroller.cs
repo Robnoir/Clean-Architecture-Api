@@ -20,15 +20,10 @@ namespace API.Controllers
 
 
         internal readonly IMediator _mediator;
-        internal readonly UserValidator _userValidator;
-        internal readonly GuidValidator _guidValidator;
 
-
-        public AuthController(IMediator mediator, UserValidator userValidator, GuidValidator guidValidator, IConfiguration configuration)
+        public AuthController(IMediator mediator, IConfiguration configuration)
         {
             _mediator = mediator;
-            _userValidator = userValidator;
-            _guidValidator = guidValidator;
             _configuration = configuration;
 
         }

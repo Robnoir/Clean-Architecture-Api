@@ -31,7 +31,7 @@ namespace API.Controllers.DogsController
         }
 
         // Get all dogs from database
-        [AllowAnonymous]
+        
         [HttpGet]
         [Route("getAllDogs")]
         public async Task<IActionResult> GetAllDogs()

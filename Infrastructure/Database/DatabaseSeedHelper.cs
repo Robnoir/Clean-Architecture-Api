@@ -31,6 +31,22 @@ namespace Infrastructure.Database.DatabaseHelpers
 
             );
 
+            modelBuilder.Entity<Bird>().HasData(
+            new Bird { Id = Guid.NewGuid(), Name = "Adam", CanFly = true },
+            new Bird { Id = Guid.NewGuid(), Name = "Perry", CanFly = true },
+            new Bird { Id = Guid.NewGuid(), Name = "Tweet", CanFly = true },
+            new Bird { Id = new Guid("12345678-1234-5678-1234-567812345612"), Name = "TestBirdForUnitTests", CanFly = true },
+            new Bird { Id = new Guid("12345678-1234-5678-1234-567812345613"), Name = "TestDeleteBird", CanFly = true }
+            );
+
+            modelBuilder.Entity<User>().HasData(
+            new User { Id = Guid.NewGuid(), Username = "rob", Email = "rob@gmail.com", PasswordHash = "Rob123" },
+            new User { Id = Guid.NewGuid(), Username = "stefan", Email = "stefan@gmail.com", PasswordHash = "Stefan123" },
+            new User { Id = Guid.NewGuid(), Username = "Navjet", Email = "navjet@gmail.com", PasswordHash = "navjet123" },
+            new User { Id = Guid.NewGuid(), Username = "Nemm", Email = "nemo@find.com", PasswordHash= "FindNemo123"},
+            new User { Id = new Guid("12345678-1234-5678-1234-567812345614"), Username = "TestDeleteUser", Email = "DeleteUser@gmail.com", PasswordHash = "TestDelete" }
+            );
+
 
         }
 

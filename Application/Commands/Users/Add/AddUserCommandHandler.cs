@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.UserRepo;
 using MediatR;
 
 namespace Application;
@@ -7,12 +8,12 @@ namespace Application;
 public class AddUserCommandHandler : IRequestHandler<AddUserCommand, User>
 {
 
-    private readonly RealDatabase _realdatabase;
-    public AddUserCommandHandler(RealDatabase realDatabase)
+    private readonly IUserRepository _userRepository;
+    public AddUserCommandHandler(IUserRepository userRepository)
     {
-        _realdatabase = realDatabase;
+        _userRepository = userRepository;
     }
-    public Task<User> Handle(AddUserCommand request, CancellationToken cancellationToken)
+    public async Task<User> Handle(AddUserCommand request, CancellationToken cancellationToken)
     {
         User userToCreate = new()
         {
@@ -20,9 +21,9 @@ public class AddUserCommandHandler : IRequestHandler<AddUserCommand, User>
             Username = request.NewUser.Username
         };
 
-        _realdatabase.Users.Add(userToCreate);
+        await _userRepository.AddUserAsync(userToCreate);
 
-        return Task.FromResult(userToCreate);
+        return userToCreate;
     }
 
 

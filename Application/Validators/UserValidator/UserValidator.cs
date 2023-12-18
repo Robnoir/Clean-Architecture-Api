@@ -27,12 +27,12 @@ public class UserValidator : AbstractValidator<User>
 
 
         RuleFor(user => user.PasswordHash)
-            .NotEmpty().WithMessage("Password can not be empty")
+            .NotEmpty().WithMessage("PasswordHash can not be empty")
             .MinimumLength(5).WithMessage("Minimum password length is 5 letters long")
             .MaximumLength(15).WithMessage("Maximum password length is 15 letters")
-            .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter")
-            .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter")
-            .Matches("[^a-zA-Z0-9]]").WithMessage("Password must contain atleast one special character")
+            .Matches("[A-Z]").WithMessage("PasswordHash must contain at least one uppercase letter")
+            .Matches("[a-z]").WithMessage("PasswordHash must contain at least one lowercase letter")
+            .Matches("[^a-zA-Z0-9]]").WithMessage("PasswordHash must contain atleast one special character")
             .NotEqual("password", StringComparer.OrdinalIgnoreCase)
             .WithMessage("password cannot be password.");
     }

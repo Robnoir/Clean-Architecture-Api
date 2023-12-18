@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using BCrypt.Net;
+using Infrastructure.Database.Repositories.UserRepo;
 
 
 
@@ -13,16 +14,17 @@ namespace Application;
 
 public class UpdateUserByIdCommandHandler : IRequestHandler<UpdateUserByIdCommand, User>
 {
-    private readonly RealDatabase _realDatabase;
+    private readonly IUserRepository _userRepository;
 
-    public UpdateUserByIdCommandHandler(RealDatabase realDatabase)
+    public UpdateUserByIdCommandHandler(IUserRepository userRepository)
     {
-        _realDatabase = realDatabase;
+        _userRepository = userRepository;
     }
 
-    public Task<User> Handle(UpdateUserByIdCommand request, CancellationToken cancellationToken)
+    public async Task<User> Handle(UpdateUserByIdCommand request, CancellationToken cancellationToken)
     {
-        var userToUpdate = _realDatabase.Users.FirstOrDefault(user => user.Id == request.UserId);
+        User userToUpdate = await _userRepository.GetUserByIdAsync(request.UserId);
+
         if (userToUpdate == null)
         {
             throw new KeyNotFoundException("User not found.");
@@ -41,9 +43,10 @@ public class UpdateUserByIdCommandHandler : IRequestHandler<UpdateUserByIdComman
         {
             userToUpdate.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.UpdateUserDto.Password);
         }
-
-
-
-        return Task.FromResult(userToUpdate);
+        userToUpdate.Username= request.UpdateUserDto.Username;
+        userToUpdate.PasswordHash = request.UpdateUserDto.Password;
+        userToUpdate.Email= request.UpdateUserDto.Email;
+        await _userRepository.UpdateUserAsync(userToUpdate);
+        return userToUpdate;
     }
 }

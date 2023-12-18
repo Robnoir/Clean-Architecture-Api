@@ -1,22 +1,28 @@
 ﻿using System.ComponentModel;
 using Domain.Models;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.UserRepo;
 using MediatR;
 
 namespace Application;
 
 public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, List<User>>
 {
-    private readonly MockDatabase _mockdatabase;
-    public GetAllUsersQueryHandler(MockDatabase mockDatabase)
+    private readonly IUserRepository _userRepository;
+    public GetAllUsersQueryHandler(IUserRepository userRepository)
     {
-        _mockdatabase = mockDatabase;
+        _userRepository = userRepository;
     }
 
-    public Task<List<User>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
+    public async Task<List<User>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
     {
-        List<User> allUsersFromMockdatabase = _mockdatabase.Users;
-        return Task.FromResult(allUsersFromMockdatabase);
+        List<User> allUsersFromDatabase = await _userRepository.GetAllUsersAsync();
+        if (allUsersFromDatabase == null)
+        {
+            throw new InvalidOperationException("No User was found, user must be 404 MIA");
+        }
+        return allUsersFromDatabase;
+
 
     }
 

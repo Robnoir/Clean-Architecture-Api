@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Infrastructure;
 using Infrastructure.Database;
 using MediatR;
 
@@ -6,19 +7,24 @@ namespace Application.Commands.Dogs.UpdateDog
 {
     public class UpdateDogByIdCommandHandler : IRequestHandler<UpdateDogByIdCommand, Dog>
     {
-        private readonly RealDatabase _realDatabase;
+        private readonly IDogRepository _dogRepository;
 
-        public UpdateDogByIdCommandHandler(RealDatabase realDatabase)
+        public UpdateDogByIdCommandHandler(IDogRepository dogRepository)
         {
-            _realDatabase = realDatabase;
+            _dogRepository = dogRepository;
         }
-        public Task<Dog> Handle(UpdateDogByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Dog> Handle(UpdateDogByIdCommand request, CancellationToken cancellationToken)
         {
-            Dog dogToUpdate = _realDatabase.Dogs.FirstOrDefault(dog => dog.Id == request.Id)!;
+            Dog dogToUpdate = await _dogRepository.GetByIdAsync(request.Id);
+                
+            if (dogToUpdate == null)
+            {
+                return null!;
+            }
 
             dogToUpdate.Name = request.UpdatedDog.Name;
-
-            return Task.FromResult(dogToUpdate);
+            await _dogRepository.UpdateAsync(dogToUpdate);
+            return dogToUpdate;
         }
     }
 }
