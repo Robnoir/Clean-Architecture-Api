@@ -22,7 +22,7 @@ namespace Infrastructure.Database.Repositories.UserRepo
             _realDatabase.Users.Add(UserToCreate);
             _realDatabase.SaveChanges();
             return await Task.FromResult(UserToCreate);
-            
+
         }
 
         public async Task DeleteUserAsync(Guid id)

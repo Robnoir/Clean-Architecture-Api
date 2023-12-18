@@ -31,7 +31,7 @@ public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User>
         {
             throw new Exception(ex.Message);
         }
-       
+
     }
 
 }

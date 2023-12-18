@@ -23,7 +23,7 @@ namespace Application.Commands.Dogs
                 Name = request.NewDog.Name
             };
 
-             await _dogRepository.AddAsync(dogToCreate);
+            await _dogRepository.AddAsync(dogToCreate);
 
             return dogToCreate;
         }

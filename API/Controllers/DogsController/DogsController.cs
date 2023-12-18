@@ -31,7 +31,7 @@ namespace API.Controllers.DogsController
         }
 
         // Get all dogs from database
-        
+
         [HttpGet]
         [Route("getAllDogs")]
         public async Task<IActionResult> GetAllDogs()

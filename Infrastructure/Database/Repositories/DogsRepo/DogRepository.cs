@@ -32,7 +32,7 @@ public class DogRepository : IDogRepository
             _realDatabase.Dogs.Remove(DeleteDogId);
             await _realDatabase.SaveChangesAsync();
         }
-        
+
     }
     public async Task<List<Dog>> GetAllDogsAsync()
     {

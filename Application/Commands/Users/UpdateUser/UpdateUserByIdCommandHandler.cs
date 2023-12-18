@@ -43,9 +43,9 @@ public class UpdateUserByIdCommandHandler : IRequestHandler<UpdateUserByIdComman
         {
             userToUpdate.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.UpdateUserDto.Password);
         }
-        userToUpdate.Username= request.UpdateUserDto.Username;
+        userToUpdate.Username = request.UpdateUserDto.Username;
         userToUpdate.PasswordHash = request.UpdateUserDto.Password;
-        userToUpdate.Email= request.UpdateUserDto.Email;
+        userToUpdate.Email = request.UpdateUserDto.Email;
         await _userRepository.UpdateUserAsync(userToUpdate);
         return userToUpdate;
     }

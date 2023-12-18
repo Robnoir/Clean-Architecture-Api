@@ -16,7 +16,7 @@ namespace Application.Commands.Dogs.UpdateDog
         public async Task<Dog> Handle(UpdateDogByIdCommand request, CancellationToken cancellationToken)
         {
             Dog dogToUpdate = await _dogRepository.GetByIdAsync(request.Id);
-                
+
             if (dogToUpdate == null)
             {
                 return null!;
