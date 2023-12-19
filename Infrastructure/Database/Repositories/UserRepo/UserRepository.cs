@@ -19,8 +19,8 @@ namespace Infrastructure.Database.Repositories.UserRepo
 
         public async Task<User> AddUserAsync(User UserToCreate)
         {
-            _realDatabase.Users.Add(UserToCreate);
-            _realDatabase.SaveChanges();
+             _realDatabase.Users.AddAsync(UserToCreate);
+             _realDatabase.SaveChangesAsync();
             return await Task.FromResult(UserToCreate);
 
         }
@@ -43,6 +43,8 @@ namespace Infrastructure.Database.Repositories.UserRepo
         public async Task<User> GetUserByIdAsync(Guid id)
         {
             return await _realDatabase.Users.FindAsync(id);
+          
+
         }
 
         public async Task UpdateUserAsync(User user)
@@ -50,5 +52,29 @@ namespace Infrastructure.Database.Repositories.UserRepo
             _realDatabase.Users.Update(user);
             await _realDatabase.SaveChangesAsync();
         }
+
+        //public async Task<User> GetUserByUsernameAsync(string username)
+        //{
+        //    if (string.IsNullOrWhiteSpace(username))
+        //    {
+        //        throw new ArgumentException("Username can not be null or empty.", nameof(username));
+        //    }
+        //    return await _realDatabase.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
+        //}
+
+        public async Task<User?> GetUserByUsernameAsync(string username)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentNullException(nameof(username), "Username cannot be null or empty.");
+            }
+
+            return await _realDatabase.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+        }
+
+
+
     }
 }

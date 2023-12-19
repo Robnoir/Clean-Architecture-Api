@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using BCrypt.Net;
+using Domain.Models;
 using Infrastructure.Database;
 using Infrastructure.Database.Repositories.UserRepo;
 using MediatR;
@@ -9,6 +10,7 @@ public class AddUserCommandHandler : IRequestHandler<AddUserCommand, User>
 {
 
     private readonly IUserRepository _userRepository;
+
     public AddUserCommandHandler(IUserRepository userRepository)
     {
         _userRepository = userRepository;
@@ -18,16 +20,17 @@ public class AddUserCommandHandler : IRequestHandler<AddUserCommand, User>
         User userToCreate = new()
         {
             Id = Guid.NewGuid(),
-            Username = request.NewUser.Username
+            Username = request.NewUser.Username,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewUser.Password),
+
         };
 
         await _userRepository.AddUserAsync(userToCreate);
 
         return userToCreate;
+
+
+
+
     }
-
-
-
-
-
 }

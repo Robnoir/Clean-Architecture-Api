@@ -21,22 +21,21 @@ namespace API.Controllers
 
 
 
-        private readonly IMediator _mediator;
         private readonly IUserRepository _userRepository;
-        // Configuration object to access settings like JWT parameters.
-        private readonly IConfiguration _configuration;
+        private readonly IMediator _mediator;
 
         public AuthController(IMediator mediator, IUserRepository userRepository, IConfiguration configuration)
         {
-            _mediator = mediator;
+           
             _userRepository = userRepository;
             _configuration = configuration;
+            _mediator = mediator;
         }
 
 
         // A static user instance for demonstration. In a real application, you'd use a database.
         public static User user = new User();
-
+        private readonly IConfiguration _configuration;
 
 
 
@@ -44,7 +43,7 @@ namespace API.Controllers
         // ------------------------------------------------------------------------------------------------------
         [AllowAnonymous]
         [HttpPost("register")]
-        public ActionResult<User> Register(UserDto request)
+        public ActionResult<User> RegisterAsync(UserDto request)
         {
 
             // Hash the password before creating the user
@@ -53,8 +52,8 @@ namespace API.Controllers
             // Create an AddUserCommand with the provided details
             
             user.Username = request.Username;
-            user.PasswordHash = request.Password;
-            
+            user.PasswordHash = passwordHash;
+
 
             _userRepository.AddUserAsync(user);
             // Returns the registered user. (Note: In real apps, don't return sensitive data.)
@@ -62,23 +61,40 @@ namespace API.Controllers
 
         }
         // ------------------------------------------------------------------------------------------------------
-        // Endpoint for logging in a user.
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto request)
+        public async Task<IActionResult> Login(UserDto request)
         {
-
-            var user = await _mediator.Send(new GetByUsernameQuery(request.Username));
-
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            // Validate input
+            if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
             {
-                return Unauthorized("Användarnamnet eller lösenordet är felaktigt.");
+                return BadRequest("Username and password must be provided.");
             }
 
-            var token = CreateToken(user);
-            return Ok(new { Token = token });
+            try
+            {
+                // Attempt to retrieve the user
+                var user = await _userRepository.GetUserByUsernameAsync(request.Username);
+
+                // Check if the user exists and if the password is correct
+                if (user != null && BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+                {
+                    // Create the token
+                    var token = CreateToken(user);
+                    return Ok(new { Token = token });
+                }
+                else
+                {
+                    // Either user not found or password mismatch
+                    return Unauthorized("Invalid username or password.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (replace with your logging mechanism)
+                Console.WriteLine(ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
         }
-
-
 
 
         //Helper method to create a JWT token.

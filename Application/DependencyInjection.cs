@@ -1,5 +1,7 @@
 ﻿using Domain;
 using FluentValidation;
+using Infrastructure.Database.Repositories.UserRepo;
+using Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
@@ -10,6 +12,8 @@ namespace Application
         {
             var assembly = typeof(DependencyInjection).Assembly;
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(assembly));
+            services.AddScoped<IDogRepository, DogRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddValidatorsFromAssembly(assembly);
 

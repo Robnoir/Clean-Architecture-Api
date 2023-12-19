@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Infrastructure.Database.Repositories.UserRepo;
 
 
 
@@ -15,6 +16,8 @@ namespace Infrastructure
 
 
             services.AddScoped<IDogRepository, DogRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
             services.AddSingleton<MockDatabase>();
 
             services.AddDbContext<RealDatabase>(options =>

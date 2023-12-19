@@ -14,5 +14,6 @@ namespace Infrastructure.Database.Repositories.UserRepo
         Task<List<User>> GetAllUsersAsync();
         Task UpdateUserAsync(User user);
         Task DeleteUserAsync(Guid id);
+        Task<User>GetUserByUsernameAsync(string username);
     }
 }

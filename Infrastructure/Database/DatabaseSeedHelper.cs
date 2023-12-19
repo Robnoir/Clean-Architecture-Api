@@ -40,17 +40,13 @@ namespace Infrastructure.Database.DatabaseHelpers
             );
 
             modelBuilder.Entity<User>().HasData(
-            new User { Id = Guid.NewGuid(), Username = "rob", Email = "rob@gmail.com", PasswordHash = "Rob123" },
-            new User { Id = Guid.NewGuid(), Username = "stefan", Email = "stefan@gmail.com", PasswordHash = "Stefan123" },
-            new User { Id = Guid.NewGuid(), Username = "Navjet", Email = "navjet@gmail.com", PasswordHash = "navjet123" },
-            new User { Id = Guid.NewGuid(), Username = "Nemm", Email = "nemo@find.com", PasswordHash = "FindNemo123" },
-            new User { Id = new Guid("12345678-1234-5678-1234-567812345614"), Username = "TestDeleteUser", Email = "DeleteUser@gmail.com", PasswordHash = "TestDelete" }
+            new User { Id = Guid.NewGuid(), Username = "rob", PasswordHash = "Rob123" },
+            new User { Id = Guid.NewGuid(), Username = "stefan", PasswordHash = "Stefan123" },
+            new User { Id = Guid.NewGuid(), Username = "Navjet", PasswordHash = "navjet123" },
+            new User { Id = Guid.NewGuid(), Username = "Nemm", PasswordHash = "FindNemo123" },
+            new User { Id = new Guid("12345678-1234-5678-1234-567812345614"), Username = "TestDeleteUser" }
             );
 
-
         }
-
-
-
     }
 }

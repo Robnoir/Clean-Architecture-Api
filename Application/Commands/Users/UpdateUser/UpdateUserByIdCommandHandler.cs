@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using BCrypt.Net;
 using Infrastructure.Database.Repositories.UserRepo;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 
 
@@ -21,32 +22,27 @@ public class UpdateUserByIdCommandHandler : IRequestHandler<UpdateUserByIdComman
         _userRepository = userRepository;
     }
 
-    public async Task<User> Handle(UpdateUserByIdCommand request, CancellationToken cancellationToken)
+    public async Task<User> Handle(UpdateUserByIdCommand command, CancellationToken cancellationToken)
     {
-        User userToUpdate = await _userRepository.GetUserByIdAsync(request.UserId);
-
-        if (userToUpdate == null)
+        var user = await _userRepository.GetUserByIdAsync(command.UserId);
+        if (user == null)
         {
-            throw new KeyNotFoundException("User not found.");
+            throw new InvalidOperationException($"Användare med ID {command.UserId} hittades inte.");
         }
 
-        // Perform the mapping here
-        if (!string.IsNullOrWhiteSpace(request.UpdateUserDto.Username))
+        // Uppdatera lösenordet om det är nytt
+        if (!string.IsNullOrWhiteSpace(command.NewPassword))
         {
-            userToUpdate.Username = request.UpdateUserDto.Username;
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(command.NewPassword);
         }
-        if (!string.IsNullOrWhiteSpace(request.UpdateUserDto.Email))
+
+        // Uppdatera userName om det är nytt
+        if (!string.IsNullOrWhiteSpace(command.UpdateUserDto.Username))
         {
-            userToUpdate.Email = request.UpdateUserDto.Email;
+            user.Username = command.UpdateUserDto.Username;
         }
-        if (!string.IsNullOrWhiteSpace(request.UpdateUserDto.Password))
-        {
-            userToUpdate.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.UpdateUserDto.Password);
-        }
-        userToUpdate.Username = request.UpdateUserDto.Username;
-        userToUpdate.PasswordHash = request.UpdateUserDto.Password;
-        userToUpdate.Email = request.UpdateUserDto.Email;
-        await _userRepository.UpdateUserAsync(userToUpdate);
-        return userToUpdate;
+
+        await _userRepository.UpdateUserAsync(user);
+        return user;
     }
 }
