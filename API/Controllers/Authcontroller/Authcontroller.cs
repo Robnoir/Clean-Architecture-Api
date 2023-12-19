@@ -8,6 +8,8 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using Infrastructure.Database.Repositories.UserRepo;
+using Application.Queries.Users.GetByUsername;
 
 namespace API.Controllers
 {
@@ -19,63 +21,65 @@ namespace API.Controllers
 
 
 
-        internal readonly IMediator _mediator;
+        private readonly IMediator _mediator;
+        private readonly IUserRepository _userRepository;
+        // Configuration object to access settings like JWT parameters.
+        private readonly IConfiguration _configuration;
 
-        public AuthController(IMediator mediator, IConfiguration configuration)
+        public AuthController(IMediator mediator, IUserRepository userRepository, IConfiguration configuration)
         {
             _mediator = mediator;
+            _userRepository = userRepository;
             _configuration = configuration;
-
         }
 
 
         // A static user instance for demonstration. In a real application, you'd use a database.
         public static User user = new User();
 
-        // Configuration object to access settings like JWT parameters.
-        private readonly IConfiguration _configuration;
+
+
 
 
         // ------------------------------------------------------------------------------------------------------
-        // Endpoint for registering a new user.
         [AllowAnonymous]
         [HttpPost("register")]
         public ActionResult<User> Register(UserDto request)
         {
-            // Hashes the password using BCrypt for security.
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-            // Sets the username and password hash for the user.
+            // Hash the password before creating the user
+            string passwordHash= BCrypt.Net.BCrypt.HashPassword(request.Password);
+
+            // Create an AddUserCommand with the provided details
+            
             user.Username = request.Username;
-            user.PasswordHash = passwordHash;
+            user.PasswordHash = request.Password;
+            
 
+            _userRepository.AddUserAsync(user);
             // Returns the registered user. (Note: In real apps, don't return sensitive data.)
             return Ok(user);
+
         }
         // ------------------------------------------------------------------------------------------------------
         // Endpoint for logging in a user.
-        [AllowAnonymous]
         [HttpPost("login")]
-        public ActionResult<string> Login(LoginDto request)
+        public async Task<IActionResult> Login(LoginDto request)
         {
-            // Checks if the username exists. Returns an error if not found.
-            if (user.Username != request.Username)
+
+            var user = await _mediator.Send(new GetByUsernameQuery(request.Username));
+
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
-                return BadRequest("User not found");
+                return Unauthorized("Användarnamnet eller lösenordet är felaktigt.");
             }
 
-            // Verifies the password. If incorrect, returns an error.
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-            {
-                return BadRequest("Wrong password");
-            }
-
-            // Creates a JWT token for the authenticated user.
-            string token = CreateToken(user);
-
-            // Returns the generated token.
-            return Ok(token);
+            var token = CreateToken(user);
+            return Ok(new { Token = token });
         }
+
+
+
 
         //Helper method to create a JWT token.
         private string CreateToken(User user)
