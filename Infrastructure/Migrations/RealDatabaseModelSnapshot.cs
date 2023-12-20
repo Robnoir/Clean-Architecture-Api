@@ -93,7 +93,7 @@ namespace Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Models.UserAnimal", b =>
+            modelBuilder.Entity("Domain.Models.UserAnimalModel", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -226,7 +226,7 @@ namespace Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Models.UserAnimal", b =>
+            modelBuilder.Entity("Domain.Models.UserAnimalModel", b =>
                 {
                     b.HasOne("Domain.Models.Animal.AnimalModel", "Animal")
                         .WithMany("UserAnimals")

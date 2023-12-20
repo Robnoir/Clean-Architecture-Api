@@ -11,6 +11,6 @@ namespace Domain.Models
         public Guid Id { get; set; }
         public string Username { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
-        public virtual ICollection<UserAnimal> UserAnimals { get; set; } = new List<UserAnimal>();
+        public virtual ICollection<UserAnimalModel> UserAnimals { get; set; } = new List<UserAnimalModel>();
     }
 }

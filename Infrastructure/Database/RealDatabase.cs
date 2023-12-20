@@ -18,7 +18,7 @@ namespace Infrastructure.Database
         public virtual DbSet<Cat> Cats { get; set; }
         public virtual DbSet<Bird> Birds { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<UserAnimal> UserAnimals { get; set; }
+        public virtual DbSet<UserAnimalModel> UserAnimals { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,15 +32,15 @@ namespace Infrastructure.Database
             base.OnModelCreating(modelBuilder);
 
             //Configuring the many-to-many relationship
-            modelBuilder.Entity<UserAnimal>()
+            modelBuilder.Entity<UserAnimalModel>()
                 .HasKey(ua => new { ua.UserId, ua.AnimalId });
 
-            modelBuilder.Entity<UserAnimal>()
+            modelBuilder.Entity<UserAnimalModel>()
                 .HasOne(ua => ua.user)
                 .WithMany(ua => ua.UserAnimals)
                 .HasForeignKey(ua => ua.UserId);
 
-            modelBuilder.Entity<UserAnimal>()
+            modelBuilder.Entity<UserAnimalModel>()
                 .HasOne(ua => ua.Animal)
                 .WithMany(a => a.UserAnimals)
                 .HasForeignKey(ua => ua.AnimalId);
