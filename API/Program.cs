@@ -10,6 +10,12 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+
+
+
+// Add Swagger/OpenAPI support
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers(options =>
 {
     // Apply a global authorization policy
@@ -19,10 +25,6 @@ builder.Services.AddControllers(options =>
     options.Filters.Add(new AuthorizeFilter(policy));
 });
 
-
-
-// Add Swagger/OpenAPI support
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(SwaggerConfig =>
 {
     // Creating a Swagger document.
@@ -39,11 +41,6 @@ builder.Services.AddSwaggerGen(SwaggerConfig =>
         In = ParameterLocation.Header,
         Description = "JWT Authorization header using the Bearer scheme."
     });
-
-
-
-
-
     // Telling SwaggerUI that the API uses Bearer(JWT) authentication
     // so you don't need to add the Bearer in front of the pasted token.
     SwaggerConfig.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -84,7 +81,7 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
         // Setting signing key from the configuration.
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]!))
     };
 });
 

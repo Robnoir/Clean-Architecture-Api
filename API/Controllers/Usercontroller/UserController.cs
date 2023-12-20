@@ -59,12 +59,13 @@ namespace API.Controllers.Usercontroller
         // Update Specific User
         [HttpPut]
         [Route("updateUser/{updatedUserId}")]
-        public async Task<IActionResult> UpdateUser([FromBody] UserDto updatedUserDto, Guid updatedUserId)
+        public async Task<IActionResult> UpdateUser([FromBody] UserDto updatedUserDto, Guid updatedUserId, string newPassword)
         {
             try
             {
-                var command = new UpdateUserByIdCommand(updatedUserDto, updatedUserId);
+                var command = new UpdateUserByIdCommand(updatedUserDto, updatedUserId, newPassword);
                 var result = await _mediator.Send(command);
+
 
                 if (result == null)
                 {

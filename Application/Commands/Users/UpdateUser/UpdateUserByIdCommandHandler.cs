@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using BCrypt.Net;
+using Infrastructure.Database.Repositories.UserRepo;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 
 
@@ -13,37 +15,34 @@ namespace Application;
 
 public class UpdateUserByIdCommandHandler : IRequestHandler<UpdateUserByIdCommand, User>
 {
-    private readonly RealDatabase _realDatabase;
+    private readonly IUserRepository _userRepository;
 
-    public UpdateUserByIdCommandHandler(RealDatabase realDatabase)
+    public UpdateUserByIdCommandHandler(IUserRepository userRepository)
     {
-        _realDatabase = realDatabase;
+        _userRepository = userRepository;
     }
 
-    public Task<User> Handle(UpdateUserByIdCommand request, CancellationToken cancellationToken)
+    public async Task<User> Handle(UpdateUserByIdCommand command, CancellationToken cancellationToken)
     {
-        var userToUpdate = _realDatabase.Users.FirstOrDefault(user => user.Id == request.UserId);
-        if (userToUpdate == null)
+        var user = await _userRepository.GetUserByIdAsync(command.UserId);
+        if (user == null)
         {
-            throw new KeyNotFoundException("User not found.");
+            throw new InvalidOperationException($"Användare med ID {command.UserId} hittades inte.");
         }
 
-        // Perform the mapping here
-        if (!string.IsNullOrWhiteSpace(request.UpdateUserDto.Username))
+        // Uppdatera lösenordet om det är nytt
+        if (!string.IsNullOrWhiteSpace(command.NewPassword))
         {
-            userToUpdate.Username = request.UpdateUserDto.Username;
-        }
-        if (!string.IsNullOrWhiteSpace(request.UpdateUserDto.Email))
-        {
-            userToUpdate.Email = request.UpdateUserDto.Email;
-        }
-        if (!string.IsNullOrWhiteSpace(request.UpdateUserDto.Password))
-        {
-            userToUpdate.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.UpdateUserDto.Password);
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(command.NewPassword);
         }
 
+        // Uppdatera userName om det är nytt
+        if (!string.IsNullOrWhiteSpace(command.UpdateUserDto.Username))
+        {
+            user.Username = command.UpdateUserDto.Username;
+        }
 
-
-        return Task.FromResult(userToUpdate);
+        await _userRepository.UpdateUserAsync(user);
+        return user;
     }
 }
