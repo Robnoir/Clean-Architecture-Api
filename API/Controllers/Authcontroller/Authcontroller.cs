@@ -35,6 +35,7 @@ namespace API.Controllers
 
         // A static user instance for demonstration. In a real application, you'd use a database.
         public static User user = new User();
+
         private readonly IConfiguration _configuration;
 
 
@@ -45,7 +46,7 @@ namespace API.Controllers
         [HttpPost("register")]
         public ActionResult<User> RegisterAsync(UserDto request)
         {
-
+            
             // Hash the password before creating the user
             string passwordHash= BCrypt.Net.BCrypt.HashPassword(request.Password);
 
@@ -61,39 +62,44 @@ namespace API.Controllers
 
         }
         // ------------------------------------------------------------------------------------------------------
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserDto request)
         {
+            var user = await _mediator.Send(new GetByUsernameQuery(request.Username));  
+
             // Validate input
-            if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
+             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
-                return BadRequest("Username and password must be provided.");
+                return Unauthorized("Användarnamnet eller lösenordet är felaktigt.");
             }
 
-            try
-            {
-                // Attempt to retrieve the user
-                var user = await _userRepository.GetUserByUsernameAsync(request.Username);
+            var token = CreateToken(user);
+            return Ok(new { Token = token });
+            //try
+            //{
+            //    // Attempt to retrieve the user
+            //    var user = await _userRepository.GetUserByUsernameAsync(request.Username);
 
-                // Check if the user exists and if the password is correct
-                if (user != null && BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-                {
-                    // Create the token
-                    var token = CreateToken(user);
-                    return Ok(new { Token = token });
-                }
-                else
-                {
-                    // Either user not found or password mismatch
-                    return Unauthorized("Invalid username or password.");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception (replace with your logging mechanism)
-                Console.WriteLine(ex.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+            //    // Check if the user exists and if the password is correct
+            //    if (user != null && BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            //    {
+            //        // Create the token
+            //        var token = CreateToken(user);
+            //        return Ok(new { Token = token });
+            //    }
+            //    else
+            //    {
+            //        // Either user not found or password mismatch
+            //        return Unauthorized("Invalid username or password.");
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    // Log the exception (replace with your logging mechanism)
+            //    Console.WriteLine(ex.ToString());
+            //    return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            //}
         }
 
 

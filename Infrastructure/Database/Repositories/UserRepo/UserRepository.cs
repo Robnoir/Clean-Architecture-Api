@@ -43,10 +43,10 @@ namespace Infrastructure.Database.Repositories.UserRepo
         public async Task<User> GetUserByIdAsync(Guid id)
         {
             return await _realDatabase.Users.FindAsync(id);
-          
+
 
         }
-
+                
         public async Task UpdateUserAsync(User user)
         {
             _realDatabase.Users.Update(user);
@@ -62,17 +62,15 @@ namespace Infrastructure.Database.Repositories.UserRepo
         //    return await _realDatabase.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
         //}
 
-        public async Task<User?> GetUserByUsernameAsync(string username)
+        public async Task<User> GetUserByUsernameAsync(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
             {
-                throw new ArgumentNullException(nameof(username), "Username cannot be null or empty.");
+                throw new ArgumentException("Username can not be null or empty.", nameof(username));
             }
-
-            return await _realDatabase.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+            return await _realDatabase.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
         }
+
 
 
 
