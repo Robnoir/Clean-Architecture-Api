@@ -15,7 +15,7 @@ namespace Application
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(assembly));
             services.AddScoped<IDogRepository, DogRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            
+
 
             services.AddValidatorsFromAssembly(assembly);
 
