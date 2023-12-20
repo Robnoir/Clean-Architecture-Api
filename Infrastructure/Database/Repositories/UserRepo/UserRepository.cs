@@ -19,8 +19,8 @@ namespace Infrastructure.Database.Repositories.UserRepo
 
         public async Task<User> AddUserAsync(User UserToCreate)
         {
-             _realDatabase.Users.AddAsync(UserToCreate);
-             _realDatabase.SaveChangesAsync();
+            _realDatabase.Users.AddAsync(UserToCreate);
+            _realDatabase.SaveChangesAsync();
             return await Task.FromResult(UserToCreate);
 
         }
@@ -46,7 +46,7 @@ namespace Infrastructure.Database.Repositories.UserRepo
 
 
         }
-                
+
         public async Task UpdateUserAsync(User user)
         {
             _realDatabase.Users.Update(user);

@@ -63,9 +63,9 @@ namespace API.Controllers.Usercontroller
         {
             try
             {
-                var command = new UpdateUserByIdCommand(updatedUserDto, updatedUserId,newPassword);
+                var command = new UpdateUserByIdCommand(updatedUserDto, updatedUserId, newPassword);
                 var result = await _mediator.Send(command);
-                
+
 
                 if (result == null)
                 {

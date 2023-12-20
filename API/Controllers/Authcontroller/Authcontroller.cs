@@ -26,7 +26,7 @@ namespace API.Controllers
 
         public AuthController(IMediator mediator, IUserRepository userRepository, IConfiguration configuration)
         {
-           
+
             _userRepository = userRepository;
             _configuration = configuration;
             _mediator = mediator;
@@ -46,12 +46,12 @@ namespace API.Controllers
         [HttpPost("register")]
         public ActionResult<User> RegisterAsync(UserDto request)
         {
-            
+
             // Hash the password before creating the user
-            string passwordHash= BCrypt.Net.BCrypt.HashPassword(request.Password);
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
             // Create an AddUserCommand with the provided details
-            
+
             user.Username = request.Username;
             user.PasswordHash = passwordHash;
 
@@ -66,10 +66,10 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserDto request)
         {
-            var user = await _mediator.Send(new GetByUsernameQuery(request.Username));  
+            var user = await _mediator.Send(new GetByUsernameQuery(request.Username));
 
             // Validate input
-             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
                 return Unauthorized("Användarnamnet eller lösenordet är felaktigt.");
             }

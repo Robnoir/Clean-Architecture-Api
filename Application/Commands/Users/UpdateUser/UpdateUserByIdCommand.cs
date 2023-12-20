@@ -15,6 +15,6 @@ public class UpdateUserByIdCommand : IRequest<User>
         UpdateUserDto = updateUserDto;
         UserId = userId;
         NewPassword = newPassword;
-       
+
     }
 }
