@@ -8,45 +8,67 @@ namespace Infrastructure.Database.Repositories.AnimalRepo
     {
         private readonly RealDatabase _realDatabase;
 
+
         public UserAnimalRepository(RealDatabase realDatabase)
         {
             _realDatabase = realDatabase;
         }
 
+        public async Task<IEnumerable<User>> GetAllUsersWithAnimalsAsync()
+        {
+            return await _realDatabase.Users
+               .Include(u => u.UserAnimals)
+               .ThenInclude(ua => ua.Animal)
+               .ToListAsync();
+        }
+
+
         public async Task<UserAnimalModel> AssignAnimalToUserAsync(Guid userId, Guid animalId)
         {
+            // Check if the user exists
             var userExists = await _realDatabase.Users.AnyAsync(u => u.Id == userId);
-            var animalExists = await _realDatabase.UserAnimals.AnyAsync(a => a.AnimalId == animalId); // Assuming Animals is the correct table
-
-            if (!userExists || !animalExists)
+            if (!userExists)
             {
-                throw new InvalidOperationException("Användaren eller djuret finns inte.");
+                throw new InvalidOperationException("User does not exist.");
+            }
+
+            // Check if the animal exists
+            var animalExists = await _realDatabase.UserAnimals.AnyAsync(a => a.AnimalId == animalId); // Adjusted for Animals DbSet
+            if (!animalExists)
+            {
+                throw new InvalidOperationException("Animal does not exist.");
             }
 
             // Check if the relationship already exists
-            var relationshipExists = await _realDatabase.UserAnimals.AnyAsync(ua => ua.UserId == userId && ua.AnimalId == animalId);
-            if (relationshipExists)
+            var existingUserAnimal = await _realDatabase.UserAnimals
+                .FirstOrDefaultAsync(ua => ua.UserId == userId && ua.AnimalId == animalId);
+
+            if (existingUserAnimal != null)
             {
-                // If the relationship already exists, you may want to handle this situation,
-                // e.g., return the existing UserAnimalModel, or throw an exception.
+                // Map to UserAnimalModel if needed
+                return new UserAnimalModel
+                {
+                    // Assuming UserAnimalModel has UserId and AnimalId properties
+                    UserId = existingUserAnimal.UserId,
+                    AnimalId = existingUserAnimal.AnimalId
+                    // Map other properties if they exist
+                };
             }
 
-            // Create new relationship if it doesn't exist
-            var userAnimal = new UserAnimalModel { UserId = userId, AnimalId = animalId };
-            _realDatabase.UserAnimals.Add(userAnimal);
+            // If the relationship doesn't exist, create a new UserAnimal entity
+            var newUserAnimal = new UserAnimalModel { UserId = userId, AnimalId = animalId };
+            _realDatabase.UserAnimals.Add(newUserAnimal);
             await _realDatabase.SaveChangesAsync();
 
-            return userAnimal;
+            // Map the new UserAnimal entity to UserAnimalModel
+            return new UserAnimalModel
+            {
+                UserId = newUserAnimal.UserId,
+                AnimalId = newUserAnimal.AnimalId
+                // Map other properties if they exist
+            };
         }
 
-
-        public async Task<IEnumerable<User>> GetaAllUsersWithAnimalsAsync()
-        {
-            return await _realDatabase.Users
-                .Include(u => u.UserAnimals)
-                .ThenInclude(ua => ua.Animal)
-                .ToListAsync();
-        }
 
         public async Task UpdateAnimalOrUserAsync(Guid userId, Guid animalId)
         {
@@ -72,6 +94,8 @@ namespace Infrastructure.Database.Repositories.AnimalRepo
                 await _realDatabase.SaveChangesAsync();
             }
         }
+
+
     }
 
 }

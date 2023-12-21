@@ -1,6 +1,7 @@
 ﻿// Infrastructure/Database/Repositories/AnimalRepo/IUserAnimalRepository.cs
 
 using Domain.Models;
+using Domain.Models.Animal;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

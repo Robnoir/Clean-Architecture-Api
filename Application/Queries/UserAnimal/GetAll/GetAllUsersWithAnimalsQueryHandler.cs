@@ -1,5 +1,7 @@
-﻿using Domain.Models;
+﻿using Application.Dtos;
+using Domain.Models;
 using Infrastructure.Database.Repositories.AnimalRepo;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,18 +10,27 @@ using System.Threading.Tasks;
 
 namespace Application.Queries.UserAnimal.GetAll
 {
-    public class GetAllUsersWithAnimalsQueryHandler
+    public class GetAllUsersWithAnimalsQueryHandler : IRequestHandler<GetAllUsersWithAnimalsQuery, IEnumerable<UserAnimalDto>>
     {
-        private readonly IUserAnimalRepository _repository;
+        private readonly IUserAnimalRepository _userAnimalRepository;
 
-        public GetAllUsersWithAnimalsQueryHandler(IUserAnimalRepository repository)
+        public GetAllUsersWithAnimalsQueryHandler(IUserAnimalRepository userAnimalRepository)
         {
-            _repository = repository;
+            _userAnimalRepository = userAnimalRepository;
         }
 
-        public async Task<IEnumerable<User>> HandleAsync(GetAllUsersWithAnimalsQuery query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<UserAnimalDto>> Handle(GetAllUsersWithAnimalsQuery request, CancellationToken cancellationToken)
         {
-            return await _repository.GetaAllUsersWithAnimalsAsync();
+            var users = await _userAnimalRepository.GetAllUsersWithAnimalsAsync();
+            return users.Select(user => new UserAnimalDto
+            {
+                UserId = user.Id,
+
+
+
+            });
         }
+
+
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Application.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Application.Commands.UserAnimal.Add; // Anpassa efter ditt projekts namnrymd
+using Application.Commands.UserAnimal.Add;
 using Application.Commands.UserAnimal.Update;
 using Application.Commands.UserAnimal.Delete;
 using Application.Queries.UserAnimal;
@@ -46,10 +46,12 @@ namespace API.Controllers.UserAnimalController
 
         // GET: api/UserAnimals
         [HttpGet]
+        [Route("GetAllUsersWithAnimals")]
         public async Task<IActionResult> GetAllUsersWithAnimals()
         {
-            var usersWithAnimals = await _mediator.Send(new GetAllUsersWithAnimalsQuery());
-            return Ok(usersWithAnimals);
+            var query = new GetAllUsersWithAnimalsQuery();
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         // PUT: api/UserAnimals/Update
