@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RealDatabase))]
-    [Migration("20231220170307_newnewmig2")]
-    partial class newnewmig2
+    [Migration("20231228151027_NewMig3")]
+    partial class NewMig3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,25 +66,25 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ce8d930d-0848-4f48-8f18-ee9031c1b8e9"),
+                            Id = new Guid("4abbe530-2a32-4009-996e-e43ae5ea3ff7"),
                             PasswordHash = "Rob123",
                             Username = "rob"
                         },
                         new
                         {
-                            Id = new Guid("7d70af93-b41a-4c16-9049-0e7fcaa3098e"),
+                            Id = new Guid("dc3e215d-db93-4c37-b864-8469104975d9"),
                             PasswordHash = "Stefan123",
                             Username = "stefan"
                         },
                         new
                         {
-                            Id = new Guid("12aff2aa-55c7-48d0-abff-8f03b5150fb7"),
+                            Id = new Guid("e7ee1380-3fe0-4303-84b3-ac526324825b"),
                             PasswordHash = "navjet123",
                             Username = "Navjet"
                         },
                         new
                         {
-                            Id = new Guid("89491297-b364-486b-bc4f-e9c7274d0047"),
+                            Id = new Guid("ac28f386-6449-4303-917b-231ff81e8e46"),
                             PasswordHash = "FindNemo123",
                             Username = "Nemm"
                         },
@@ -123,19 +123,19 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f05635e8-4ba1-4055-bcf6-7de70b09bcb8"),
+                            Id = new Guid("68920ce9-aa48-4d0b-96c4-4b31ed92597a"),
                             Name = "Adam",
                             CanFly = true
                         },
                         new
                         {
-                            Id = new Guid("10e5b07b-7e5e-468e-a4a2-39c048bc06cd"),
+                            Id = new Guid("cec8bbd2-777f-4cc2-bde1-2ed57a5942e3"),
                             Name = "Perry",
                             CanFly = true
                         },
                         new
                         {
-                            Id = new Guid("899526b6-06f1-4f97-856e-b791e0b287a8"),
+                            Id = new Guid("c2b3381c-0632-4048-a8fe-a35e8a20ed75"),
                             Name = "Tweet",
                             CanFly = true
                         },
@@ -165,19 +165,19 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d458a5d3-0be8-4042-a5e2-90266f983f6d"),
+                            Id = new Guid("39f07666-06d1-4759-9e01-abf784320de1"),
                             Name = "Nugget",
                             LikesToPlay = true
                         },
                         new
                         {
-                            Id = new Guid("4536b0a1-166f-4c52-8379-7dfa02f055db"),
+                            Id = new Guid("5bcccf26-011b-4b15-bfbd-9874c1c0338f"),
                             Name = "SmallMac",
                             LikesToPlay = true
                         },
                         new
                         {
-                            Id = new Guid("be2c29dd-dbdb-4336-92fb-eb8659d4dc8c"),
+                            Id = new Guid("415f6345-46c6-43c3-b9d5-2251540da414"),
                             Name = "Avocado",
                             LikesToPlay = false
                         },
@@ -204,17 +204,17 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2d12e32a-3d35-4f0f-865f-b81a74cbd3ae"),
+                            Id = new Guid("57423d44-1cab-4764-8ee4-fe034f72eeeb"),
                             Name = "Björn"
                         },
                         new
                         {
-                            Id = new Guid("93312dac-9b76-484f-aed1-444ce8dbe290"),
+                            Id = new Guid("faf1d15e-3571-472e-8871-e9c0b567ea18"),
                             Name = "Patrik"
                         },
                         new
                         {
-                            Id = new Guid("97b9bf54-4acf-48e1-8251-26bc58482912"),
+                            Id = new Guid("07899b5a-1cfc-4c4c-a164-d3e9050dfc38"),
                             Name = "Alfred"
                         },
                         new
