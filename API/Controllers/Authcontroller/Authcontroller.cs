@@ -76,30 +76,7 @@ namespace API.Controllers
 
             var token = CreateToken(user);
             return Ok(new { Token = token });
-            //try
-            //{
-            //    // Attempt to retrieve the user
-            //    var user = await _userRepository.GetUserByUsernameAsync(request.Username);
 
-            //    // Check if the user exists and if the password is correct
-            //    if (user != null && BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-            //    {
-            //        // Create the token
-            //        var token = CreateToken(user);
-            //        return Ok(new { Token = token });
-            //    }
-            //    else
-            //    {
-            //        // Either user not found or password mismatch
-            //        return Unauthorized("Invalid username or password.");
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    // Log the exception (replace with your logging mechanism)
-            //    Console.WriteLine(ex.ToString());
-            //    return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            //}
         }
 
 
