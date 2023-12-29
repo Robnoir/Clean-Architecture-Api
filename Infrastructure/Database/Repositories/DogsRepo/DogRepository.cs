@@ -20,8 +20,6 @@ public class DogRepository : IDogRepository
         _realDatabase.Dogs.Add(dogToCreate);
         _realDatabase.SaveChanges();
         return await Task.FromResult(dogToCreate);
-
-
     }
     public async Task DeleteAsync(Guid dogId)
     {

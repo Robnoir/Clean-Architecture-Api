@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Infrastructure.Database.Repositories.UserRepo;
 using Infrastructure.Database.Repositories.UserAnimalRepo;
+using Infrastructure.Database.Repositories.BirdRepo;
+using Infrastructure.Database.Repositories.CatRepo;
 
 
 
@@ -19,6 +21,8 @@ namespace Infrastructure
             services.AddScoped<IDogRepository, DogRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserAnimalRepository, UserAnimalRepository>();
+            services.AddScoped<IBirdRepository, BirdRepository>();
+            services.AddScoped<ICatRepository, CatRepository>();
 
             services.AddSingleton<MockDatabase>();
 
