@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.BirdRepo;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -11,21 +12,24 @@ namespace Application.Commands.Birds.UpdateBird
 {
     public class UpdateBirdByIdCommandHandler : IRequestHandler<UpdateBirdByIdCommand, Bird>
     {
-        private readonly RealDatabase _realDatabase;
+        private readonly IBirdRepository _birdRepository;
 
-        public UpdateBirdByIdCommandHandler(RealDatabase realDatabase)
+        public UpdateBirdByIdCommandHandler(IBirdRepository birdRepository)
         {
-            _realDatabase = realDatabase;
+            _birdRepository = birdRepository;
         }
-        public Task<Bird> Handle(UpdateBirdByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Bird> Handle(UpdateBirdByIdCommand request, CancellationToken cancellationToken)
         {
-            Bird birdToUpdate = _realDatabase.Birds.FirstOrDefault(bird => bird.Id == request.Id)!;
+            Bird birdToUpdate = await _birdRepository.GetByIdAsync(request.Id);
 
-            birdToUpdate.Name = request.UpdatedBird.Name;
-            birdToUpdate.CanFly = request.UpdatedBird.CanFly;
+            if (birdToUpdate == null)
+            {
+                return null;
+            }
 
-
-            return Task.FromResult(birdToUpdate);
+           birdToUpdate.Name = request.UpdatedBird.Name;
+            await _birdRepository.UpdateAsync(birdToUpdate);
+            return birdToUpdate;
         }
     }
 

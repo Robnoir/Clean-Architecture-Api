@@ -4,6 +4,7 @@ using Application.Commands.Dogs.UpdateDog;
 using Application.Dtos;
 using Application.Queries.Dogs.GetAll;
 using Application.Queries.Dogs.GetById;
+using Application.Queries.Dogs.GetDogByAttribute;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -65,6 +66,15 @@ namespace API.Controllers.DogsController
 
 
         }
+        //GetByAttribute
+        [HttpGet("byBreedAndWeight")]
+        public async Task<IActionResult> GetDogByBreedAndWeight([FromQuery] string? breed, [FromQuery] int? weight)
+        {
+            var query = new GetDogByAttributeQuery(breed, weight);
+            var dog = await _mediator.Send(query);
+            return dog != null ? Ok(dog) : BadRequest();
+        }
+
 
         // Create a new dog 
         [HttpPost]

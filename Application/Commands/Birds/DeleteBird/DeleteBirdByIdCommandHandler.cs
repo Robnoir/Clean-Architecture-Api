@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.BirdRepo;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,29 +13,26 @@ namespace Application.Commands.Birds.DeleteBird
     public class DeleteBirdByIdCommandHandler : IRequestHandler<DeleteBirdByIdCommand, Bird>
     {
 
-        private readonly RealDatabase _realDatabase;
-        public DeleteBirdByIdCommandHandler(RealDatabase realDatabase)
+        private readonly IBirdRepository _birdRepository;
+        public DeleteBirdByIdCommandHandler(IBirdRepository birdRepository)
         {
-            _realDatabase = realDatabase;
+            _birdRepository = birdRepository;
         }
 
-        public Task<Bird> Handle(DeleteBirdByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Bird> Handle(DeleteBirdByIdCommand request, CancellationToken cancellationToken)
         {
-            var birdToDelete = _realDatabase.Birds.FirstOrDefault(bird => bird.Id == request.Id);
-
-            if (birdToDelete != null)
+            Bird birdToDelete = await _birdRepository.GetByIdAsync(request.Id);
+            if (birdToDelete == null)
             {
-                _realDatabase.Birds.Remove(birdToDelete);
-            }
-            else
-            {
-                // Throw an exception or handle the null case as needed for your application
-                throw new InvalidOperationException("No bird with the given ID was found.");
-            }
+                throw new InvalidOperationException("No Bird with the given id was found");
 
+            }
+            await _birdRepository.DeleteAsync(request.Id);
 
-            return Task.FromResult(birdToDelete);
+            return birdToDelete;
+
         }
+
 
 
 

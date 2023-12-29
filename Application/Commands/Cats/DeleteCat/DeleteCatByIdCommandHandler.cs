@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.CatRepo;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -11,27 +12,27 @@ namespace Application.Commands.Cats.DeleteCat
 {
     public class DeleteCatByIdCommandHandler : IRequestHandler<DeleteCatByIdCommand, Cat>
     {
-        private readonly RealDatabase _realDatabase;
-        public DeleteCatByIdCommandHandler(RealDatabase realDatabase)
+        private readonly ICatRepository _catRepository;
+
+        public DeleteCatByIdCommandHandler(ICatRepository catRepository)
         {
-            _realDatabase = realDatabase;
+            _catRepository = catRepository;
         }
 
-        public Task<Cat> Handle(DeleteCatByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Cat> Handle(DeleteCatByIdCommand request, CancellationToken cancellationToken)
         {
-            var catToDelete = _realDatabase.Cats.FirstOrDefault(cat => cat.Id == request.Id);
+            Cat catTodelete = await _catRepository.GetByIdAsync(request.Id);
 
-            if (catToDelete != null)
+            if (catTodelete != null)
             {
-                _realDatabase.Cats.Remove(catToDelete);
-            }
-            else
-            {
-                // Throw an exception or handle the null case as needed for your application
-                throw new InvalidOperationException("No cat with the given ID was found.");
+                throw new InvalidOperationException("No cat with the given id was found");
+
             }
 
-            return Task.FromResult(catToDelete);
+            await _catRepository.DeleteAsync(request.Id);
+
+            return (catTodelete);
+          
         }
 
     }

@@ -1,26 +1,31 @@
 ﻿using Domain.Models;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.BirdRepo;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Permissions;
 
 
 namespace Application.Queries.Birds.GetAll
 {
     public class GetAllBirdsQueryHandler : IRequestHandler<GetAllBirdsQuery, List<Bird>>
     {
-        private readonly RealDatabase _realDatabase;
+        private readonly IBirdRepository _birdRepository;
 
-        public GetAllBirdsQueryHandler(RealDatabase realDatabase)
+        public GetAllBirdsQueryHandler(IBirdRepository birdRepository)
         {
-            _realDatabase = realDatabase;
+            _birdRepository = birdRepository;
         }
 
         public async Task<List<Bird>> Handle(GetAllBirdsQuery request, CancellationToken cancellationToken)
         {
-            // List<Bird> allBirdsFromMockDatabase = _realDatabase.Birds;
-            // return Task.FromResult(allBirdsFromMockDatabase);
-            var birds = await _realDatabase.Birds.Select(d => new Bird { Id = d.Id, Name = d.Name }).ToListAsync();
-            return birds;
+            List<Bird> allBirdsFromDatabase = await _birdRepository.GetAllBirdsAsync();
+            if (allBirdsFromDatabase == null)
+            {
+                throw new InvalidOperationException("No Birds Was Found");
+            }
+            return allBirdsFromDatabase;
+
         }
     }
 

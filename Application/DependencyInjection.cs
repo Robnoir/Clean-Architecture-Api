@@ -4,6 +4,8 @@ using Infrastructure.Database.Repositories.UserRepo;
 using Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Database.Repositories.UserAnimalRepo;
+using Infrastructure.Database.Repositories.BirdRepo;
+using Infrastructure.Database.Repositories.CatRepo;
 
 namespace Application
 {
@@ -16,7 +18,8 @@ namespace Application
             services.AddScoped<IDogRepository, DogRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserAnimalRepository, UserAnimalRepository>();
-
+            services.AddScoped<IBirdRepository, BirdRepository>();
+            services.AddScoped<ICatRepository, CatRepository>();
             services.AddValidatorsFromAssembly(assembly);
 
             return services;

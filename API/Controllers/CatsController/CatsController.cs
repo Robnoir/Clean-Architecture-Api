@@ -3,6 +3,7 @@ using Application.Commands.Cats.DeleteCat;
 using Application.Commands.Cats.UpdateCat;
 using Application.Dtos;
 using Application.Queries.Cats.GetAll;
+using Application.Queries.Cats.GetByAttribute;
 using Application.Queries.Cats.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,17 @@ namespace API.Controllers.CatsController
             return Ok(await _mediator.Send(new GetAllCatsQuery()));
             //Return Ok(Get All Cats)
         }
+
+        [HttpGet("byBreedAndWeigh")]
+        public async Task<IActionResult> GetCatsByBreedAndWeight([FromQuery] string? breed, [FromQuery] int? weight)
+        {
+           var query = new GetCatByAttributeQuery(breed, weight);
+            var cat = await _mediator.Send(query);
+            return cat != null ? Ok(cat) : NotFound();
+        }
+
+
+
 
         //Get Cat By Id
         [HttpGet]

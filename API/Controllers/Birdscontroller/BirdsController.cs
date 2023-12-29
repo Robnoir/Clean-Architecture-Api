@@ -6,6 +6,7 @@ using Application.Commands.Birds.UpdateBird;
 using Application.Queries.Birds.GetAll;
 using Application.Queries.Birds.GetById;
 using Application.Commands.Birds.AddBird;
+using Application.Queries.Birds.GetByAttribute;
 
 
 namespace API.Controllers.Birdscontroller
@@ -28,6 +29,17 @@ namespace API.Controllers.Birdscontroller
             return Ok(await _mediator.Send(new GetAllBirdsQuery()));
             // Return Ok(Get All Birds)
         }
+
+
+        //GetByAttribute
+        [HttpGet("color/{color}")]
+        public async Task<IActionResult> GetBirdByAttribute(string color)
+        {
+            var query = new GetBirdByAttributeQuery(color);
+            var bird = await _mediator.Send(query);
+            return bird != null ? Ok(bird) : NotFound();
+        }
+
 
         // Get Bird By Id
         [HttpGet]

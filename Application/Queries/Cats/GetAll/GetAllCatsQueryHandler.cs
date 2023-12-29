@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.CatRepo;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -11,15 +12,21 @@ namespace Application.Queries.Cats.GetAll
 {
     public class GetAllCatsQueryHandler : IRequestHandler<GetAllCatsQuery, List<Cat>>
     {
-        private readonly MockDatabase _mockDatabase;
-        public GetAllCatsQueryHandler(MockDatabase mockDatabase)
+        private ICatRepository _catRepository;
+
+        public GetAllCatsQueryHandler(ICatRepository catRepository)
         {
-            _mockDatabase = mockDatabase;
+            _catRepository = catRepository;
         }
-        public Task<List<Cat>> Handle(GetAllCatsQuery request, CancellationToken cancellationToken)
+        public async Task<List<Cat>> Handle(GetAllCatsQuery request, CancellationToken cancellationToken)
         {
-            List<Cat> allCatsFromMockDatabase = _mockDatabase.Cats;
-            return Task.FromResult(allCatsFromMockDatabase);
+            List<Cat> allCatsFromDatabase = await _catRepository.GetAllCatsAsync();
+            if (allCatsFromDatabase == null)
+            {
+                throw new InvalidOperationException("No Cats Was Found");
+            }
+
+            return allCatsFromDatabase;
 
         }
     }
