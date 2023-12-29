@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Models.Animal;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -42,11 +43,12 @@ namespace Infrastructure.Database.Repositories.BirdRepo
             return await _realDatabase.Birds.ToListAsync();
         }
 
-        public async Task<Bird> GetBirdByColorAsync(string birdColor)
+        public async Task<List<Bird>> GetBirdByColorAsync(string birdColor)
         {
-            var bird = await _realDatabase.Birds.FirstOrDefaultAsync(b => b.BirdColor == birdColor);
-
-            return bird;
+            return await _realDatabase.Birds
+                        .OfType<Bird>()
+                        .Where(b => b.BirdColor == birdColor)
+                        .ToListAsync();
         }
 
         public async Task<Bird> GetByIdAsync(Guid birdId)

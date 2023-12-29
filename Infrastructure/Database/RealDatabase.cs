@@ -19,6 +19,8 @@ namespace Infrastructure.Database
         public virtual DbSet<Cat> Cats { get; set; }
         public virtual DbSet<Bird> Birds { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<AnimalModel> Animals { get; set; }
+
         public virtual DbSet<UserAnimal> UserAnimals { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -46,11 +48,11 @@ namespace Infrastructure.Database
                 .WithMany(a => a.UserAnimals)
                 .HasForeignKey(ua => ua.AnimalId);
 
-            modelBuilder.Entity<AnimalModel>()
-                .HasDiscriminator<string>("Discriminator")
-                .HasValue<Dog>("Dog")
-                .HasValue<Cat>("Cat")
-                .HasValue<Bird>("Bird");
+            //modelBuilder.Entity<AnimalModel>()
+            //    .HasDiscriminator<string>("Discriminator")
+            //    .HasValue<Dog>("Dog")
+            //    .HasValue<Cat>("Cat")
+            //    .HasValue<Bird>("Bird");
 
 
             DatabaseSeedHelper.SeedData(modelBuilder);

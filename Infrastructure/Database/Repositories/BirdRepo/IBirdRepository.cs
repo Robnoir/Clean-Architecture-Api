@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Models.Animal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Infrastructure.Database.Repositories.BirdRepo
         Task<Bird> AddAsync(Bird birdToCreate);
         Task UpdateAsync(Bird bird);
         Task DeleteAsync(Guid birdId);
-        Task<Bird> GetBirdByColorAsync(string BirdColor);
+        Task<List<Bird>> GetBirdByColorAsync(string BirdColor);
         Task<List<Bird>> GetAllBirdsAsync();
     }
 }
