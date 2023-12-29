@@ -1,5 +1,6 @@
 using System;
 using Domain.Models;
+using Domain.Models.Animal;
 using Infrastructure.Database.DatabaseHelpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -44,6 +45,13 @@ namespace Infrastructure.Database
                 .HasOne(ua => ua.Animal)
                 .WithMany(a => a.UserAnimals)
                 .HasForeignKey(ua => ua.AnimalId);
+
+            modelBuilder.Entity<AnimalModel>()
+                .HasDiscriminator<string>("Discriminator")
+                .HasValue<Dog>("Dog")
+                .HasValue<Cat>("Cat")
+                .HasValue<Bird>("Bird");
+
 
             DatabaseSeedHelper.SeedData(modelBuilder);
         }
