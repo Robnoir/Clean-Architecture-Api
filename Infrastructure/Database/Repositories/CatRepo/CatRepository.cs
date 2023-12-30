@@ -49,7 +49,7 @@ namespace Infrastructure.Database.Repositories.CatRepo
             return await _realDatabase.Cats.FindAsync(catId);
         }
 
-        public async Task<List<Cat>> GetCatByBreedAndWeight(string? breed, int? weight)
+        public async Task<List<Cat>> GetCatByBreedAndWeight(string breed, int? weight)
         {
             var query = _realDatabase.Cats.AsQueryable();
 

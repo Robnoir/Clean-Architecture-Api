@@ -41,7 +41,7 @@ public class DogRepository : IDogRepository
         return await _realDatabase.Dogs.FindAsync(dogId);
     }
 
-    public async Task<List<Dog>> GetDogByBreedAndWeight(string? breed, int? weight)
+    public async Task<List<Dog>> GetDogByBreedAndWeight(string breed, int? weight)
     {
        var query = _realDatabase.Dogs.AsQueryable();
 

@@ -1,7 +1,6 @@
 using System;
 using Domain.Models;
 using Domain.Models.Animal;
-using Infrastructure.Database.DatabaseHelpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -19,7 +18,6 @@ namespace Infrastructure.Database
         public virtual DbSet<Cat> Cats { get; set; }
         public virtual DbSet<Bird> Birds { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<AnimalModel> Animals { get; set; }
         public virtual DbSet<UserAnimal> UserAnimals { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -31,6 +29,35 @@ namespace Infrastructure.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<Dog>().HasData(
+            new Dog { Id = Guid.NewGuid(), Name = "Björn", Breed = "Golden", Weight = 5 },
+            new Dog { Id = Guid.NewGuid(), Name = "Rio", Breed = "Weenerdog", Weight = 5 },
+            new Dog { Id = Guid.NewGuid(), Name = "Alfred", Breed = "Bulldog", Weight = 5 }
+            );
+
+            modelBuilder.Entity<Cat>().HasData(
+            new Cat { Id = Guid.NewGuid(), Name = "Nugget", LikesToPlay = true, Breed = "Fluffy", Weight = 2 },
+            new Cat { Id = Guid.NewGuid(), Name = "SmallMac", LikesToPlay = true, Breed = "NakedCat", Weight = 2 },
+            new Cat { Id = Guid.NewGuid(), Name = "Avocado", LikesToPlay = false, Breed = "Lion", Weight = 200 }
+            );
+
+            modelBuilder.Entity<Bird>().HasData(
+            new Bird { Id = Guid.NewGuid(), Name = "Adam", CanFly = true, BirdColor = "Green" },
+            new Bird { Id = Guid.NewGuid(), Name = "Perry", CanFly = true, BirdColor = "Red" },
+            new Bird { Id = Guid.NewGuid(), Name = "Tweet", CanFly = true, BirdColor = "Blue" }
+            );
+
+            modelBuilder.Entity<User>().HasData(
+            new User { Id = Guid.NewGuid(), Username = "rob", PasswordHash = "Rob123" },
+            new User { Id = Guid.NewGuid(), Username = "stefan", PasswordHash = "Stefan123" },
+            new User { Id = Guid.NewGuid(), Username = "Navjet", PasswordHash = "navjet123" },
+            new User { Id = Guid.NewGuid(), Username = "Nemo", PasswordHash = "FindNemo123" }
+            );
+
+
+
+
             base.OnModelCreating(modelBuilder);
 
             //Configuring the many-to-many relationship
@@ -47,10 +74,6 @@ namespace Infrastructure.Database
                 .WithMany(a => a.UserAnimals)
                 .HasForeignKey(ua => ua.AnimalId);
 
-          
-
-
-            DatabaseSeedHelper.SeedData(modelBuilder);
         }
 
 

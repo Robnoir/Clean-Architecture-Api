@@ -20,9 +20,9 @@ namespace Infrastructure
 
             services.AddScoped<IDogRepository, DogRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserAnimalRepository, UserAnimalRepository>();
             services.AddScoped<IBirdRepository, BirdRepository>();
             services.AddScoped<ICatRepository, CatRepository>();
+            services.AddScoped<IUserAnimalRepository, UserAnimalRepository>();
 
             services.AddSingleton<MockDatabase>();
 
