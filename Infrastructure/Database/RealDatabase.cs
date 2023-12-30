@@ -3,6 +3,11 @@ using Domain.Models;
 using Domain.Models.Animal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Database
 {
@@ -30,30 +35,30 @@ namespace Infrastructure.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Dog>().HasData(
-            new Dog { Id = Guid.NewGuid(), Name = "Björn", Breed = "Golden", Weight = 5 },
-            new Dog { Id = Guid.NewGuid(), Name = "Rio", Breed = "Weenerdog", Weight = 5 },
-            new Dog { Id = Guid.NewGuid(), Name = "Alfred", Breed = "Bulldog", Weight = 5 }
-            );
+            //modelBuilder.Entity<Dog>().HasData(
+            //new Dog { Id = Guid.NewGuid(), Name = "Björn", Breed = "Golden", Weight = 5 },
+            //new Dog { Id = Guid.NewGuid(), Name = "Rio", Breed = "Weenerdog", Weight = 5 },
+            //new Dog { Id = Guid.NewGuid(), Name = "Alfred", Breed = "Bulldog", Weight = 5 }
+            //);
 
-            modelBuilder.Entity<Cat>().HasData(
-            new Cat { Id = Guid.NewGuid(), Name = "Nugget", LikesToPlay = true, Breed = "Fluffy", Weight = 2 },
-            new Cat { Id = Guid.NewGuid(), Name = "SmallMac", LikesToPlay = true, Breed = "NakedCat", Weight = 2 },
-            new Cat { Id = Guid.NewGuid(), Name = "Avocado", LikesToPlay = false, Breed = "Lion", Weight = 200 }
-            );
+            //modelBuilder.Entity<Cat>().HasData(
+            //new Cat { Id = Guid.NewGuid(), Name = "Nugget", LikesToPlay = true, Breed = "Fluffy", Weight = 2 },
+            //new Cat { Id = Guid.NewGuid(), Name = "SmallMac", LikesToPlay = true, Breed = "NakedCat", Weight = 2 },
+            //new Cat { Id = Guid.NewGuid(), Name = "Avocado", LikesToPlay = false, Breed = "Lion", Weight = 200 }
+            //);
 
-            modelBuilder.Entity<Bird>().HasData(
-            new Bird { Id = Guid.NewGuid(), Name = "Adam", CanFly = true, BirdColor = "Green" },
-            new Bird { Id = Guid.NewGuid(), Name = "Perry", CanFly = true, BirdColor = "Red" },
-            new Bird { Id = Guid.NewGuid(), Name = "Tweet", CanFly = true, BirdColor = "Blue" }
-            );
+            //modelBuilder.Entity<Bird>().HasData(
+            //new Bird { Id = Guid.NewGuid(), Name = "Adam", CanFly = true, BirdColor = "Green" },
+            //new Bird { Id = Guid.NewGuid(), Name = "Perry", CanFly = true, BirdColor = "Red" },
+            //new Bird { Id = Guid.NewGuid(), Name = "Tweet", CanFly = true, BirdColor = "Blue" }
+            //);
 
-            modelBuilder.Entity<User>().HasData(
-            new User { Id = Guid.NewGuid(), Username = "rob", PasswordHash = "Rob123" },
-            new User { Id = Guid.NewGuid(), Username = "stefan", PasswordHash = "Stefan123" },
-            new User { Id = Guid.NewGuid(), Username = "Navjet", PasswordHash = "navjet123" },
-            new User { Id = Guid.NewGuid(), Username = "Nemo", PasswordHash = "FindNemo123" }
-            );
+            //modelBuilder.Entity<User>().HasData(
+            //new User { Id = Guid.NewGuid(), Username = "rob", PasswordHash = "Rob123" },
+            //new User { Id = Guid.NewGuid(), Username = "stefan", PasswordHash = "Stefan123" },
+            //new User { Id = Guid.NewGuid(), Username = "Navjet", PasswordHash = "navjet123" },
+            //new User { Id = Guid.NewGuid(), Username = "Nemo", PasswordHash = "FindNemo123" }
+            //);
 
 
 
@@ -70,7 +75,7 @@ namespace Infrastructure.Database
                 .HasForeignKey(ua => ua.UserId);
 
             modelBuilder.Entity<UserAnimal>()
-                .HasOne(ua => ua.Animal)
+                .HasOne(ua => ua.AnimalModel)
                 .WithMany(a => a.UserAnimals)
                 .HasForeignKey(ua => ua.AnimalId);
 

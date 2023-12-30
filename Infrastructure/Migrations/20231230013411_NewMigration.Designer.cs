@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(RealDatabase))]
-    [Migration("20231230004959_NewMigration")]
+    [Migration("20231230013411_NewMigration")]
     partial class NewMigration
     {
         /// <inheritdoc />
@@ -66,25 +66,25 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("708623a3-b7e2-4ffb-8586-2d7a55ac36ac"),
+                            Id = new Guid("1c0324a0-9843-4a57-a099-e3e5119d9436"),
                             PasswordHash = "Rob123",
                             Username = "rob"
                         },
                         new
                         {
-                            Id = new Guid("6ddcedc2-202d-4650-b91d-6198b0cf6d4b"),
+                            Id = new Guid("32f3c8a5-63d1-454e-879b-18335f7b0d62"),
                             PasswordHash = "Stefan123",
                             Username = "stefan"
                         },
                         new
                         {
-                            Id = new Guid("3c6735eb-327d-41f0-b799-1468dde7fce7"),
+                            Id = new Guid("5eec743e-6976-41bf-a387-013d6e6882e1"),
                             PasswordHash = "navjet123",
                             Username = "Navjet"
                         },
                         new
                         {
-                            Id = new Guid("a332802c-8c46-4b53-80eb-3502d263033d"),
+                            Id = new Guid("45c4cff4-f95e-4c43-9169-028f5834bfc4"),
                             PasswordHash = "FindNemo123",
                             Username = "Nemo"
                         });
@@ -121,21 +121,21 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5fd4a1a3-bfb2-4ac1-b9bc-95311f4df961"),
+                            Id = new Guid("10595caf-27b1-416b-a015-a086bae02be1"),
                             Name = "Adam",
                             BirdColor = "Green",
                             CanFly = true
                         },
                         new
                         {
-                            Id = new Guid("74b7aab7-9853-4da8-bb21-3c314727376b"),
+                            Id = new Guid("2f99edba-e25f-473a-a27b-46303b5773d8"),
                             Name = "Perry",
                             BirdColor = "Red",
                             CanFly = true
                         },
                         new
                         {
-                            Id = new Guid("cd55cd4a-baeb-4594-92b1-d537cfbb130e"),
+                            Id = new Guid("a7f9f995-eda4-4f59-85dc-88326ca066ce"),
                             Name = "Tweet",
                             BirdColor = "Blue",
                             CanFly = true
@@ -161,7 +161,7 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a59f071e-9125-446b-b978-6946a04091eb"),
+                            Id = new Guid("e7e5b8ab-ea4b-449e-b933-371807429c26"),
                             Name = "Nugget",
                             Breed = "Fluffy",
                             LikesToPlay = true,
@@ -169,7 +169,7 @@ namespace Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("8546cff4-8d71-4048-9e4a-b1b121774d28"),
+                            Id = new Guid("88dd5521-1fbd-41a5-9ec9-7865140e86eb"),
                             Name = "SmallMac",
                             Breed = "NakedCat",
                             LikesToPlay = true,
@@ -177,7 +177,7 @@ namespace Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("89ac1bb0-ec1d-4f3b-86dc-64adc5dff7e2"),
+                            Id = new Guid("9865a47b-d2f5-4aec-8626-551a2c8c1905"),
                             Name = "Avocado",
                             Breed = "Lion",
                             LikesToPlay = false,
@@ -210,21 +210,21 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5997273c-6580-47be-af36-df2262eaab73"),
+                            Id = new Guid("2703450b-069d-480f-a67b-a5f9816d56e0"),
                             Name = "Björn",
                             Breed = "Golden",
                             Weight = 5
                         },
                         new
                         {
-                            Id = new Guid("5228bf97-9e26-46e0-9828-8b515c65b1d5"),
+                            Id = new Guid("05f0cdab-475b-43b3-bee1-9d42a9e1bf14"),
                             Name = "Rio",
                             Breed = "Weenerdog",
                             Weight = 5
                         },
                         new
                         {
-                            Id = new Guid("b93d0bba-2146-4ceb-aa6f-371e9c9bc591"),
+                            Id = new Guid("41294ba1-0823-49e0-a5b7-cac0ca1d0e8e"),
                             Name = "Alfred",
                             Breed = "Bulldog",
                             Weight = 5
@@ -233,7 +233,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Models.UserAnimal", b =>
                 {
-                    b.HasOne("Domain.Models.Animal.AnimalModel", "Animal")
+                    b.HasOne("Domain.Models.Animal.AnimalModel", "AnimalModel")
                         .WithMany("UserAnimals")
                         .HasForeignKey("AnimalId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -245,7 +245,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Animal");
+                    b.Navigation("AnimalModel");
 
                     b.Navigation("user");
                 });

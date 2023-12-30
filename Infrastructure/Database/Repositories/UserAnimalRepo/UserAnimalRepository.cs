@@ -21,7 +21,7 @@ namespace Infrastructure.Database.Repositories.UserAnimalRepo
 
             if (user == null || animal == null)
             {
-                throw new ArgumentException("User or Animal not found");
+                throw new ArgumentException("User or AnimalModel not found");
             }
 
             var userAnimal = new UserAnimal { UserId = userId, AnimalId = animalId };
@@ -44,7 +44,7 @@ namespace Infrastructure.Database.Repositories.UserAnimalRepo
         {
             return await _realDatabase.Users
                                   .Include(u => u.UserAnimals)
-                                  .ThenInclude(ua => ua.Animal)
+                                  .ThenInclude(ua => ua.AnimalModel)
                                   .ToListAsync();
         }
         public async Task UpdateUserAnimalAsync(Guid userId, Guid currentAnimalModelId, Guid newAnimalModelId)
