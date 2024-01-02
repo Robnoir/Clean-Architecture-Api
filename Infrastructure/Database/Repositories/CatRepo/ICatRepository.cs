@@ -13,7 +13,7 @@ namespace Infrastructure.Database.Repositories.CatRepo
         Task<Cat> AddAsync(Cat catToCreate);
         Task UpdateAsync(Cat cat);
         Task DeleteAsync(Guid catId);
-        Task<List<Cat>>GetCatByBreedAndWeight(string Breed, int? Weight);
+        Task<List<Cat>> GetCatByBreedAndWeight(string Breed, int? Weight);
         Task<List<Cat>> GetAllCatsAsync();
 
         //Task<List<Cat>> GetCatByWeightAsync(int Weight);

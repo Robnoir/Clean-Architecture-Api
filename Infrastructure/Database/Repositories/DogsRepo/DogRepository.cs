@@ -43,16 +43,16 @@ public class DogRepository : IDogRepository
 
     public async Task<List<Dog>> GetDogByBreedAndWeight(string breed, int? weight)
     {
-       var query = _realDatabase.Dogs.AsQueryable();
+        var query = _realDatabase.Dogs.AsQueryable();
 
         if (!string.IsNullOrEmpty(breed))
         {
-            query = query.Where(d=>d.Breed == breed);
+            query = query.Where(d => d.Breed == breed);
         }
 
-        if(weight.HasValue)
+        if (weight.HasValue)
         {
-            query = query.Where(d=>d.Weight == weight);
+            query = query.Where(d => d.Weight == weight);
         }
 
         return await query.ToListAsync();
