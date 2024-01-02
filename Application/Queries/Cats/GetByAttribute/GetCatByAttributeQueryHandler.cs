@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Queries.Cats.GetByAttribute
 {
-    public class GetCatByAttributeQueryHandler : IRequestHandler<GetCatByAttributeQuery, List<Cat>>
+    public class GetCatByAttributeQueryHandler : IRequestHandler<GetCatByAttributeQuery, IEnumerable<Cat>>
     {
         private readonly ICatRepository _catRepository;
 
@@ -19,8 +19,7 @@ namespace Application.Queries.Cats.GetByAttribute
 
         }
 
-
-        public async Task<List<Cat>> Handle(GetCatByAttributeQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Cat>> Handle(GetCatByAttributeQuery request, CancellationToken cancellationToken)
         {
             return await _catRepository.GetCatByBreedAndWeight(request.Breed, request.Weight);
         }

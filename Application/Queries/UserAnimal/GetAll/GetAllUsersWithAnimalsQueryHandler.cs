@@ -25,16 +25,16 @@ namespace Application.Queries.UserAnimal
                 UserId = user.Id,
                 Username = user.Username,
                 Dogs = user.UserAnimals
-                    .Where(ua => ua.Animal is Dog)
-                    .Select(ua => new DogDto { Name = ua.Animal.Name })
+                    .Where(ua => ua.AnimalModel is Dog)
+                    .Select(ua => new DogDto { Name = ua.AnimalModel.Name })
                     .ToList(),
                 Cats = user.UserAnimals
-                    .Where(ua => ua.Animal is Cat)
-                    .Select(ua => new CatDto { Name = ua.Animal.Name, LikesToPlay = ((Cat)ua.Animal).LikesToPlay })
+                    .Where(ua => ua.AnimalModel is Cat)
+                    .Select(ua => new CatDto { Name = ua.AnimalModel.Name, LikesToPlay = ((Cat)ua.AnimalModel).LikesToPlay })
                     .ToList(),
                 Birds = user.UserAnimals
-                    .Where(ua => ua.Animal is Bird)
-                    .Select(ua => new BirdDto { Name = ua.Animal.Name, CanFly = ((Bird)ua.Animal).CanFly })
+                    .Where(ua => ua.AnimalModel is Bird)
+                    .Select(ua => new BirdDto { Name = ua.AnimalModel.Name, CanFly = ((Bird)ua.AnimalModel).CanFly })
                     .ToList(),
             });
 

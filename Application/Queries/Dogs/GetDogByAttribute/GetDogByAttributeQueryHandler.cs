@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Queries.Dogs.GetDogByAttribute
 {
-    public class GetDogByAttributeQueryHandler : IRequestHandler<GetDogByAttributeQuery, List<Dog>>
+    public class GetDogByAttributeQueryHandler : IRequestHandler<GetDogByAttributeQuery, IEnumerable<Dog>>
     {
         private readonly IDogRepository _dogRepository;
 
@@ -18,7 +18,7 @@ namespace Application.Queries.Dogs.GetDogByAttribute
             _dogRepository = dogRepository; 
         }
 
-        public async Task<List<Dog>> Handle(GetDogByAttributeQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Dog>> Handle(GetDogByAttributeQuery request, CancellationToken cancellationToken)
         {
             return await _dogRepository.GetDogByBreedAndWeight(request.Breed, request.Weight);
         }

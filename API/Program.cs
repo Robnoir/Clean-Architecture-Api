@@ -28,7 +28,7 @@ builder.Services.AddControllers(options =>
 builder.Services.AddSwaggerGen(SwaggerConfig =>
 {
     // Creating a Swagger document.
-    SwaggerConfig.SwaggerDoc("v1", new OpenApiInfo { Title = "API Animal", Version = "v1" });
+    SwaggerConfig.SwaggerDoc("v1", new OpenApiInfo { Title = "API AnimalModel", Version = "v1" });
 
     // Adding JWT Authentication definition to Swagger.
     // This allows Swagger UI to send the JWT token in the Authorization header.
