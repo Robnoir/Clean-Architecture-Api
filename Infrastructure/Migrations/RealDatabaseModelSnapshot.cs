@@ -63,25 +63,25 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1c0324a0-9843-4a57-a099-e3e5119d9436"),
+                            Id = new Guid("28a71c01-94b7-412c-bf34-d84b9ceedb55"),
                             PasswordHash = "Rob123",
                             Username = "rob"
                         },
                         new
                         {
-                            Id = new Guid("32f3c8a5-63d1-454e-879b-18335f7b0d62"),
+                            Id = new Guid("b139c64a-5aa5-43f0-b7f3-c75f8a322085"),
                             PasswordHash = "Stefan123",
                             Username = "stefan"
                         },
                         new
                         {
-                            Id = new Guid("5eec743e-6976-41bf-a387-013d6e6882e1"),
+                            Id = new Guid("2001b559-bbff-4624-af0b-f28121e6ae79"),
                             PasswordHash = "navjet123",
                             Username = "Navjet"
                         },
                         new
                         {
-                            Id = new Guid("45c4cff4-f95e-4c43-9169-028f5834bfc4"),
+                            Id = new Guid("101e0987-23bd-4475-983d-72d9e3cf5230"),
                             PasswordHash = "FindNemo123",
                             Username = "Nemo"
                         });
@@ -118,21 +118,21 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("10595caf-27b1-416b-a015-a086bae02be1"),
+                            Id = new Guid("3e0e0635-5a89-47b1-b490-1f52750d3928"),
                             Name = "Adam",
                             BirdColor = "Green",
                             CanFly = true
                         },
                         new
                         {
-                            Id = new Guid("2f99edba-e25f-473a-a27b-46303b5773d8"),
+                            Id = new Guid("9ad0afa1-c0de-47a3-912a-09a65f3943d2"),
                             Name = "Perry",
                             BirdColor = "Red",
                             CanFly = true
                         },
                         new
                         {
-                            Id = new Guid("a7f9f995-eda4-4f59-85dc-88326ca066ce"),
+                            Id = new Guid("ce8d2c98-8ea7-4ebd-907e-662da3ea65a2"),
                             Name = "Tweet",
                             BirdColor = "Blue",
                             CanFly = true
@@ -143,42 +143,42 @@ namespace Infrastructure.Migrations
                 {
                     b.HasBaseType("Domain.Models.Animal.AnimalModel");
 
-                    b.Property<string>("Breed")
+                    b.Property<string>("CatBreed")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("CatWeight")
+                        .HasColumnType("int");
+
                     b.Property<bool>("LikesToPlay")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("Weight")
-                        .HasColumnType("int");
 
                     b.HasDiscriminator().HasValue("Cat");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e7e5b8ab-ea4b-449e-b933-371807429c26"),
+                            Id = new Guid("883ae556-b539-4521-8b2e-ce2231bb688e"),
                             Name = "Nugget",
-                            Breed = "Fluffy",
-                            LikesToPlay = true,
-                            Weight = 2
+                            CatBreed = "Fluffy",
+                            CatWeight = 2,
+                            LikesToPlay = true
                         },
                         new
                         {
-                            Id = new Guid("88dd5521-1fbd-41a5-9ec9-7865140e86eb"),
+                            Id = new Guid("16c624d8-de21-4d11-9184-dd51200cc0ac"),
                             Name = "SmallMac",
-                            Breed = "NakedCat",
-                            LikesToPlay = true,
-                            Weight = 2
+                            CatBreed = "NakedCat",
+                            CatWeight = 2,
+                            LikesToPlay = true
                         },
                         new
                         {
-                            Id = new Guid("9865a47b-d2f5-4aec-8626-551a2c8c1905"),
+                            Id = new Guid("8a638eaf-83c5-439a-9331-ea9833b47d2d"),
                             Name = "Avocado",
-                            Breed = "Lion",
-                            LikesToPlay = false,
-                            Weight = 200
+                            CatBreed = "Lion",
+                            CatWeight = 200,
+                            LikesToPlay = false
                         });
                 });
 
@@ -186,45 +186,36 @@ namespace Infrastructure.Migrations
                 {
                     b.HasBaseType("Domain.Models.Animal.AnimalModel");
 
-                    b.Property<string>("Breed")
+                    b.Property<string>("DogBreed")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Weight")
+                    b.Property<int>("DogWeight")
                         .HasColumnType("int");
-
-                    b.ToTable(t =>
-                        {
-                            t.Property("Breed")
-                                .HasColumnName("Dog_Breed");
-
-                            t.Property("Weight")
-                                .HasColumnName("Dog_Weight");
-                        });
 
                     b.HasDiscriminator().HasValue("Dog");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2703450b-069d-480f-a67b-a5f9816d56e0"),
+                            Id = new Guid("234dcd1b-2c02-4558-92ac-13d2101deb20"),
                             Name = "Björn",
-                            Breed = "Golden",
-                            Weight = 5
+                            DogBreed = "Golden",
+                            DogWeight = 5
                         },
                         new
                         {
-                            Id = new Guid("05f0cdab-475b-43b3-bee1-9d42a9e1bf14"),
+                            Id = new Guid("f6efd467-9d6f-43b2-89d2-05007b771676"),
                             Name = "Rio",
-                            Breed = "Weenerdog",
-                            Weight = 5
+                            DogBreed = "Weenerdog",
+                            DogWeight = 5
                         },
                         new
                         {
-                            Id = new Guid("41294ba1-0823-49e0-a5b7-cac0ca1d0e8e"),
+                            Id = new Guid("c8dab3d3-420b-4172-ae42-0c51b7ec88b8"),
                             Name = "Alfred",
-                            Breed = "Bulldog",
-                            Weight = 5
+                            DogBreed = "Bulldog",
+                            DogWeight = 5
                         });
                 });
 

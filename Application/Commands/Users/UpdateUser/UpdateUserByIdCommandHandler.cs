@@ -7,42 +7,56 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using BCrypt.Net;
 using Infrastructure.Database.Repositories.UserRepo;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-
-
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace Application;
 
 public class UpdateUserByIdCommandHandler : IRequestHandler<UpdateUserByIdCommand, User>
 {
     private readonly IUserRepository _userRepository;
+    private readonly ILogger<UpdateUserByIdCommandHandler> _logger;
 
-    public UpdateUserByIdCommandHandler(IUserRepository userRepository)
+    public UpdateUserByIdCommandHandler(IUserRepository userRepository, ILogger<UpdateUserByIdCommandHandler> logger)
     {
         _userRepository = userRepository;
+        _logger = logger;
     }
 
     public async Task<User> Handle(UpdateUserByIdCommand command, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetUserByIdAsync(command.UserId);
-        if (user == null)
+        try
         {
-            throw new InvalidOperationException($"Användare med ID {command.UserId} hittades inte.");
-        }
+            _logger.LogInformation("Attempting to update user with ID: {UserId}", command.UserId);
 
-        // Uppdatera lösenordet om det är nytt
-        if (!string.IsNullOrWhiteSpace(command.NewPassword))
+            var user = await _userRepository.GetUserByIdAsync(command.UserId);
+            if (user == null)
+            {
+                _logger.LogWarning("User not found with ID: {UserId}", command.UserId);
+                throw new InvalidOperationException($"User with ID {command.UserId} was not found.");
+            }
+
+            // Update password if it's new
+            if (!string.IsNullOrWhiteSpace(command.NewPassword))
+            {
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(command.NewPassword);
+            }
+
+            // Update username if it's new
+            if (!string.IsNullOrWhiteSpace(command.UpdateUserDto.Username))
+            {
+                user.Username = command.UpdateUserDto.Username;
+            }
+
+            await _userRepository.UpdateUserAsync(user);
+
+            _logger.LogInformation("User successfully updated with ID: {UserId}", user.Id);
+            return user;
+        }
+        catch (Exception ex)
         {
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(command.NewPassword);
+            _logger.LogError(ex, "An error occurred while updating user with ID: {UserId}", command.UserId);
+            throw;
         }
-
-        // Uppdatera userName om det är nytt
-        if (!string.IsNullOrWhiteSpace(command.UpdateUserDto.Username))
-        {
-            user.Username = command.UpdateUserDto.Username;
-        }
-
-        await _userRepository.UpdateUserAsync(user);
-        return user;
     }
 }

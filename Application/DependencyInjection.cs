@@ -20,6 +20,7 @@ namespace Application
             services.AddScoped<IUserAnimalRepository, UserAnimalRepository>();
             services.AddScoped<IBirdRepository, BirdRepository>();
             services.AddScoped<ICatRepository, CatRepository>();
+
             services.AddValidatorsFromAssembly(assembly);
 
             return services;

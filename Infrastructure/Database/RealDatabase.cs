@@ -36,15 +36,15 @@ namespace Infrastructure.Database
         {
 
             modelBuilder.Entity<Dog>().HasData(
-            new Dog { Id = Guid.NewGuid(), Name = "Björn", Breed = "Golden", Weight = 5 },
-            new Dog { Id = Guid.NewGuid(), Name = "Rio", Breed = "Weenerdog", Weight = 5 },
-            new Dog { Id = Guid.NewGuid(), Name = "Alfred", Breed = "Bulldog", Weight = 5 }
+            new Dog { Id = Guid.NewGuid(), Name = "Björn", DogBreed = "Golden", DogWeight = 5 },
+            new Dog { Id = Guid.NewGuid(), Name = "Rio", DogBreed = "Weenerdog", DogWeight = 5 },
+            new Dog { Id = Guid.NewGuid(), Name = "Alfred", DogBreed = "Bulldog", DogWeight = 5 }
             );
 
             modelBuilder.Entity<Cat>().HasData(
-            new Cat { Id = Guid.NewGuid(), Name = "Nugget", LikesToPlay = true, Breed = "Fluffy", Weight = 2 },
-            new Cat { Id = Guid.NewGuid(), Name = "SmallMac", LikesToPlay = true, Breed = "NakedCat", Weight = 2 },
-            new Cat { Id = Guid.NewGuid(), Name = "Avocado", LikesToPlay = false, Breed = "Lion", Weight = 200 }
+            new Cat { Id = Guid.NewGuid(), Name = "Nugget", LikesToPlay = true, CatBreed = "Fluffy", CatWeight = 2 },
+            new Cat { Id = Guid.NewGuid(), Name = "SmallMac", LikesToPlay = true, CatBreed = "NakedCat", CatWeight = 2 },
+            new Cat { Id = Guid.NewGuid(), Name = "Avocado", LikesToPlay = false, CatBreed = "Lion", CatWeight = 200 }
             );
 
             modelBuilder.Entity<Bird>().HasData(

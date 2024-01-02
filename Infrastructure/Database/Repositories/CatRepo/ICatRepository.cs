@@ -16,7 +16,7 @@ namespace Infrastructure.Database.Repositories.CatRepo
         Task<List<Cat>> GetCatByBreedAndWeight(string Breed, int? Weight);
         Task<List<Cat>> GetAllCatsAsync();
 
-        //Task<List<Cat>> GetCatByWeightAsync(int Weight);
-        //Task<List<Cat>> GetCatByBreed(string Breed);
+        //Task<List<Cat>> GetCatByWeightAsync(int DogWeight);
+        //Task<List<Cat>> GetCatByBreed(string DogBreed);
     }
 }

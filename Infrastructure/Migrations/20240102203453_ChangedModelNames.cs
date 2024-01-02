@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class NewMigration : Migration
+    public partial class ChangedModelNames : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,12 +29,12 @@ namespace Infrastructure.Migrations
                     BirdColor = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     LikesToPlay = table.Column<bool>(type: "tinyint(1)", nullable: true),
-                    Breed = table.Column<string>(type: "longtext", nullable: true)
+                    CatBreed = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Weight = table.Column<int>(type: "int", nullable: true),
-                    DogBreed = table.Column<string>(name: "Dog_Breed", type: "longtext", nullable: true)
+                    CatWeight = table.Column<int>(type: "int", nullable: true),
+                    DogBreed = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DogWeight = table.Column<int>(name: "Dog_Weight", type: "int", nullable: true)
+                    DogWeight = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,57 +85,57 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "AnimalModel",
-                columns: new[] { "Id", "Dog_Breed", "Discriminator", "Name", "Dog_Weight" },
-                values: new object[] { new Guid("05f0cdab-475b-43b3-bee1-9d42a9e1bf14"), "Weenerdog", "Dog", "Rio", 5 });
+                columns: new[] { "Id", "CatBreed", "CatWeight", "Discriminator", "LikesToPlay", "Name" },
+                values: new object[] { new Guid("16c624d8-de21-4d11-9184-dd51200cc0ac"), "NakedCat", 2, "Cat", true, "SmallMac" });
+
+            migrationBuilder.InsertData(
+                table: "AnimalModel",
+                columns: new[] { "Id", "Discriminator", "DogBreed", "DogWeight", "Name" },
+                values: new object[] { new Guid("234dcd1b-2c02-4558-92ac-13d2101deb20"), "Dog", "Golden", 5, "Björn" });
 
             migrationBuilder.InsertData(
                 table: "AnimalModel",
                 columns: new[] { "Id", "BirdColor", "CanFly", "Discriminator", "Name" },
-                values: new object[] { new Guid("10595caf-27b1-416b-a015-a086bae02be1"), "Green", true, "Bird", "Adam" });
+                values: new object[] { new Guid("3e0e0635-5a89-47b1-b490-1f52750d3928"), "Green", true, "Bird", "Adam" });
 
             migrationBuilder.InsertData(
                 table: "AnimalModel",
-                columns: new[] { "Id", "Dog_Breed", "Discriminator", "Name", "Dog_Weight" },
-                values: new object[] { new Guid("2703450b-069d-480f-a67b-a5f9816d56e0"), "Golden", "Dog", "Björn", 5 });
-
-            migrationBuilder.InsertData(
-                table: "AnimalModel",
-                columns: new[] { "Id", "BirdColor", "CanFly", "Discriminator", "Name" },
-                values: new object[] { new Guid("2f99edba-e25f-473a-a27b-46303b5773d8"), "Red", true, "Bird", "Perry" });
-
-            migrationBuilder.InsertData(
-                table: "AnimalModel",
-                columns: new[] { "Id", "Dog_Breed", "Discriminator", "Name", "Dog_Weight" },
-                values: new object[] { new Guid("41294ba1-0823-49e0-a5b7-cac0ca1d0e8e"), "Bulldog", "Dog", "Alfred", 5 });
-
-            migrationBuilder.InsertData(
-                table: "AnimalModel",
-                columns: new[] { "Id", "Breed", "Discriminator", "LikesToPlay", "Name", "Weight" },
+                columns: new[] { "Id", "CatBreed", "CatWeight", "Discriminator", "LikesToPlay", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("88dd5521-1fbd-41a5-9ec9-7865140e86eb"), "NakedCat", "Cat", true, "SmallMac", 2 },
-                    { new Guid("9865a47b-d2f5-4aec-8626-551a2c8c1905"), "Lion", "Cat", false, "Avocado", 200 }
+                    { new Guid("883ae556-b539-4521-8b2e-ce2231bb688e"), "Fluffy", 2, "Cat", true, "Nugget" },
+                    { new Guid("8a638eaf-83c5-439a-9331-ea9833b47d2d"), "Lion", 200, "Cat", false, "Avocado" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AnimalModel",
                 columns: new[] { "Id", "BirdColor", "CanFly", "Discriminator", "Name" },
-                values: new object[] { new Guid("a7f9f995-eda4-4f59-85dc-88326ca066ce"), "Blue", true, "Bird", "Tweet" });
+                values: new object[] { new Guid("9ad0afa1-c0de-47a3-912a-09a65f3943d2"), "Red", true, "Bird", "Perry" });
 
             migrationBuilder.InsertData(
                 table: "AnimalModel",
-                columns: new[] { "Id", "Breed", "Discriminator", "LikesToPlay", "Name", "Weight" },
-                values: new object[] { new Guid("e7e5b8ab-ea4b-449e-b933-371807429c26"), "Fluffy", "Cat", true, "Nugget", 2 });
+                columns: new[] { "Id", "Discriminator", "DogBreed", "DogWeight", "Name" },
+                values: new object[] { new Guid("c8dab3d3-420b-4172-ae42-0c51b7ec88b8"), "Dog", "Bulldog", 5, "Alfred" });
+
+            migrationBuilder.InsertData(
+                table: "AnimalModel",
+                columns: new[] { "Id", "BirdColor", "CanFly", "Discriminator", "Name" },
+                values: new object[] { new Guid("ce8d2c98-8ea7-4ebd-907e-662da3ea65a2"), "Blue", true, "Bird", "Tweet" });
+
+            migrationBuilder.InsertData(
+                table: "AnimalModel",
+                columns: new[] { "Id", "Discriminator", "DogBreed", "DogWeight", "Name" },
+                values: new object[] { new Guid("f6efd467-9d6f-43b2-89d2-05007b771676"), "Dog", "Weenerdog", 5, "Rio" });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "PasswordHash", "Username" },
                 values: new object[,]
                 {
-                    { new Guid("1c0324a0-9843-4a57-a099-e3e5119d9436"), "Rob123", "rob" },
-                    { new Guid("32f3c8a5-63d1-454e-879b-18335f7b0d62"), "Stefan123", "stefan" },
-                    { new Guid("45c4cff4-f95e-4c43-9169-028f5834bfc4"), "FindNemo123", "Nemo" },
-                    { new Guid("5eec743e-6976-41bf-a387-013d6e6882e1"), "navjet123", "Navjet" }
+                    { new Guid("101e0987-23bd-4475-983d-72d9e3cf5230"), "FindNemo123", "Nemo" },
+                    { new Guid("2001b559-bbff-4624-af0b-f28121e6ae79"), "navjet123", "Navjet" },
+                    { new Guid("28a71c01-94b7-412c-bf34-d84b9ceedb55"), "Rob123", "rob" },
+                    { new Guid("b139c64a-5aa5-43f0-b7f3-c75f8a322085"), "Stefan123", "stefan" }
                 });
 
             migrationBuilder.CreateIndex(

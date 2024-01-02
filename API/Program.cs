@@ -1,3 +1,4 @@
+#nullable enable
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Application;
@@ -6,10 +7,19 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Serilog;
+using FluentValidation.AspNetCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .WriteTo.Console()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 
 
@@ -20,10 +30,19 @@ builder.Services.AddControllers(options =>
 {
     // Apply a global authorization policy
     var policy = new AuthorizationPolicyBuilder()
-                     .RequireAuthenticatedUser()
-                     .Build();
+                    .RequireAuthenticatedUser()
+                    .Build();
     options.Filters.Add(new AuthorizeFilter(policy));
+})
+.AddFluentValidation(fv =>
+{
+    fv.AddValidatorsFromAssemblyContaining<DogValidator>(); // Use the new method here
 });
+
+
+
+
+
 
 builder.Services.AddSwaggerGen(SwaggerConfig =>
 {

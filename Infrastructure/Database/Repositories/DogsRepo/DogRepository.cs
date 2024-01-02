@@ -47,12 +47,12 @@ public class DogRepository : IDogRepository
 
         if (!string.IsNullOrEmpty(breed))
         {
-            query = query.Where(d => d.Breed == breed);
+            query = query.Where(d => d.DogBreed == breed);
         }
 
         if (weight.HasValue)
         {
-            query = query.Where(d => d.Weight == weight);
+            query = query.Where(d => d.DogWeight == weight);
         }
 
         return await query.ToListAsync();

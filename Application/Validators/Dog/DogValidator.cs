@@ -12,7 +12,7 @@ public class DogValidator : AbstractValidator<DogDto>
         RuleFor(dog => dog.Name)
         .NotEmpty().WithMessage("Dog Name can not be empty")
         .NotNull().WithMessage("Dog name can not be Null");
-
+            
     }
 
 

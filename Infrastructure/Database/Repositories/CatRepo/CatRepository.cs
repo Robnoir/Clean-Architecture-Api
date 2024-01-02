@@ -55,12 +55,12 @@ namespace Infrastructure.Database.Repositories.CatRepo
 
             if (!string.IsNullOrEmpty(breed))
             {
-                query = query.Where(c => c.Breed == breed);
+                query = query.Where(c => c.CatBreed == breed);
             }
 
             if (weight.HasValue)
             {
-                query = query.Where(c => c.Weight == weight);
+                query = query.Where(c => c.CatWeight == weight);
             }
 
             return await query.ToListAsync();
