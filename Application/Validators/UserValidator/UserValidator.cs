@@ -12,8 +12,6 @@ public class UserValidator : AbstractValidator<User>
         RuleFor(user => user.Id)
             .NotEmpty().WithMessage("User Id cannot be empty");
 
-
-
         RuleFor(user => user.Username)
             .NotEmpty().WithMessage("Username cannot be empty")
             .MaximumLength(10).WithMessage("Username cant be longer than 10 letters")

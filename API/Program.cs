@@ -19,7 +19,8 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
 
-builder.Host.UseSerilog();
+builder.Services.AddLogging();
+
 
 
 
@@ -30,15 +31,10 @@ builder.Services.AddControllers(options =>
 {
     // Apply a global authorization policy
     var policy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
+                     .RequireAuthenticatedUser()
+                     .Build();
     options.Filters.Add(new AuthorizeFilter(policy));
-})
-.AddFluentValidation(fv =>
-{
-    fv.AddValidatorsFromAssemblyContaining<DogValidator>(); // Use the new method here
 });
-
 
 
 

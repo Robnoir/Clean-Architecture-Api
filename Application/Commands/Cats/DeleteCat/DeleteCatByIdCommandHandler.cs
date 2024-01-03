@@ -14,9 +14,9 @@ namespace Application.Commands.Cats.DeleteCat
     public class DeleteCatByIdCommandHandler : IRequestHandler<DeleteCatByIdCommand, Cat>
     {
         private readonly ICatRepository _catRepository;
-        private readonly Logger<DeleteCatByIdCommandHandler> _logger;
+        private readonly ILogger<DeleteCatByIdCommandHandler> _logger;
 
-        public DeleteCatByIdCommandHandler(ICatRepository catRepository,Logger<DeleteCatByIdCommandHandler> logger)
+        public DeleteCatByIdCommandHandler(ICatRepository catRepository,ILogger<DeleteCatByIdCommandHandler> logger)
         {
             _catRepository = catRepository;
             _logger = logger;
