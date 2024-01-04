@@ -31,6 +31,7 @@ namespace API.Controllers.UserAnimalController
             var query = new GetAllUsersWithAnimalsQuery();
             var result = await _mediator.Send(query);
             return Ok(result);
+
         }
 
         [HttpPost]
