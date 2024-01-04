@@ -22,13 +22,13 @@
 //        [Test]
 //        public async Task GetAllDogs_ShouldReturnallDogsInList()
 //        {
-//            // Arrange
+//            Arrange
 //            int expectedNumberOfDogs = 5; // Checks how many dogs is in the mockDB List
 
-//            // Act
-//            var result = await _handler.Handle(new GetAllDogsQuery(), CancellationToken.None);
+//            Act
+//           var result = await _handler.Handle(new GetAllDogsQuery(), CancellationToken.None);
 
-//            // Assert
+//            Assert
 //            Assert.NotNull(result);
 //            Assert.That(result.Count, Is.EqualTo(expectedNumberOfDogs));
 

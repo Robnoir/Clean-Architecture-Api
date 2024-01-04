@@ -1,58 +1,59 @@
-﻿//using Application.Commands.Dogs.UpdateDog;
-//using Application.Dtos;
-//using Domain.Models;
-//using Infrastructure.Database;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using Application.Commands.Dogs.UpdateDog;
+using Application.Dtos;
+using Domain.Models;
+using Infrastructure;
+using Infrastructure.Database;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-//namespace Test.DogTests.CommandTest
-//{
-//    [TestFixture]
-//    internal class UpdateDogTest
-//    {
-//        //Initializes the mockdatabase and handler before every test
-//        private UpdateDogByIdCommandHandler _handler;
-//        private MockDatabase _mockDatabase;
+namespace Test.DogTests.CommandTest
+{
+    [TestFixture]
+    internal class UpdateDogTest
+    {
+        private Mock<IDogRepository> _mockDogRepository;
+        private Mock<ILogger<UpdateDogByIdCommandHandler>> _mockLogger;
+        private UpdateDogByIdCommandHandler _handler;
 
-//        [SetUp]
-//        public void Setup()
-//        {
+        [SetUp]
+        public void Setup()
+        {
+            _mockDogRepository = new Mock<IDogRepository>();
+            _mockLogger = new Mock<ILogger<UpdateDogByIdCommandHandler>>();
+            _handler = new UpdateDogByIdCommandHandler(_mockDogRepository.Object, _mockLogger.Object);
+        }
 
-//            _mockDatabase = new MockDatabase();
-//            _handler = new UpdateDogByIdCommandHandler(_mockDatabase);
-//        }
+        [Test]
+        public async Task Handle_ShouldUpdateDog_WhenDogExists()
+        {
+            var dogId = Guid.NewGuid();
+            var existingDog = new Dog { Id = dogId, Name = "Old Name" };
+            var updatedDogDto = new DogDto { Name = "New Name" };
+            _mockDogRepository.Setup(repo => repo.GetByIdAsync(dogId)).ReturnsAsync(existingDog);
+            _mockDogRepository.Setup(repo => repo.UpdateAsync(It.IsAny<Dog>())).Returns(Task.CompletedTask);
 
-//        [Test]
-//        public async Task Handle_UpdatedDogInDB()
-//        {
-//            // Arrange
-//            var InitDog = new Dog { Id = Guid.NewGuid(), Name = "" };
-//            _mockDatabase.Dogs.Add(InitDog);
+            var command = new UpdateDogByIdCommand(updatedDogDto, dogId);
+            var result = await _handler.Handle(command, CancellationToken.None);
 
-//            //skapar en instans av updatedog
-//            var command = new UpdateDogByIdCommand(
-//                updatedDog: new DogDto { Name = "UpdatedDogName" },
-//                id: InitDog.Id
-//            );
+            Assert.IsNotNull(result);
+            Assert.That(result.Name, Is.EqualTo("New Name"));
+        }
 
-//            // Act
-//            var result = await _handler.Handle(command, CancellationToken.None);
+        [Test]
+        public async Task Handle_ShouldReturnNull_WhenDogDoesNotExist()
+        {
+            var dogId = Guid.NewGuid();
+            var updatedDogDto = new DogDto { Name = "New Name" };
+            _mockDogRepository.Setup(repo => repo.GetByIdAsync(dogId)).ReturnsAsync((Dog)null);
 
-//            // Assert
-//            Assert.NotNull(result);
-//            Assert.IsInstanceOf<Dog>(result);
+            var command = new UpdateDogByIdCommand(updatedDogDto, dogId);
+            var result = await _handler.Handle(command, CancellationToken.None);
 
-//            //kolla om hunden har det uppdaterade namnet 
-//            Assert.That(result.Name, Is.EqualTo("UpdatedDogName"));
-
-//            // kolla om hunden har uppdaterats i mocken också
-//            var updatedDogInDatabase = _mockDatabase.Dogs.FirstOrDefault(dog => dog.Id == command.Id);
-//            Assert.That(updatedDogInDatabase, Is.Not.Null);
-//            Assert.That(updatedDogInDatabase.Name, Is.EqualTo("UpdatedDogName"));
-//        }
-
-//    }
-//}
+            Assert.IsNull(result);
+        }
+    }
+}

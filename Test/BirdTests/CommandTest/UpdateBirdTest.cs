@@ -1,59 +1,58 @@
-﻿//using Application.Commands.Cats.UpdateCat;
-//using Application.Dtos;
-//using Domain.Models;
-//using Infrastructure.Database;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using Application.Commands.Birds.UpdateBird;
+using Application.Dtos;
+using Domain.Models;
+using Infrastructure.Database.Repositories.BirdRepo;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-//namespace Test.BirdTests.CommandTest
-//{
-//    [TestFixture]
-//    internal class UpdateDogTest
-//    {
-//        //Initializes the mockdatabase and handler before every test
+namespace Test.BirdTests.CommandTest
+{
+    [TestFixture]
+    internal class UpdateBirdTest
+    {
+        private Mock<IBirdRepository> _mockBirdRepository;
+        private Mock<ILogger<UpdateBirdByIdCommandHandler>> _mockLogger;
+        private UpdateBirdByIdCommandHandler _handler;
 
-//        private UpdateCatByIdCommandHandler _handler;
-//        private MockDatabase _mockDatabase;
+        [SetUp]
+        public void Setup()
+        {
+            _mockBirdRepository = new Mock<IBirdRepository>();
+            _mockLogger = new Mock<ILogger<UpdateBirdByIdCommandHandler>>();
+            _handler = new UpdateBirdByIdCommandHandler(_mockBirdRepository.Object, _mockLogger.Object);
+        }
 
-//        [SetUp]
-//        public void Setup()
-//        {
+        [Test]
+        public async Task UpdateBirdById_ShouldUpdateBird_IfBirdExists()
+        {
+            var birdId = Guid.NewGuid();
+            var bird = new Bird { Id = birdId, Name = "Old Name" };
+            var updatedBird = new BirdDto { Name = "New Name" };
+            _mockBirdRepository.Setup(repo => repo.GetByIdAsync(birdId)).ReturnsAsync(bird);
+            _mockBirdRepository.Setup(repo => repo.UpdateAsync(It.IsAny<Bird>())).Returns(Task.CompletedTask);
 
-//            _mockDatabase = new MockDatabase();
-//            _handler = new UpdateCatByIdCommandHandler(_mockDatabase);
-//        }
+            var command = new UpdateBirdByIdCommand(updatedBird, birdId);
+            var result = await _handler.Handle(command, CancellationToken.None);
 
-//        [Test]
-//        public async Task Handle_UpdatedDogInDB()
-//        {
-//            // Arrange
-//            var InitCat = new Cat { Id = Guid.NewGuid(), Name = "" };
-//            _mockDatabase.Cats.Add(InitCat);
+            _mockBirdRepository.Verify(repo => repo.UpdateAsync(It.IsAny<Bird>()), Times.Once);
+            Assert.That(result.Name, Is.EqualTo("New Name"));
+        }
 
-//            //skapar en instans av updatedog
-//            var command = new UpdateCatByIdCommand(
-//                updatedCat: new CatDto { Name = "UpdatedCatName" },
-//                id: InitCat.Id
-//            );
+        [Test]
+        public async Task UpdateBirdById_ShouldReturnNull_IfBirdDoesNotExist()
+        {
+            var birdId = Guid.NewGuid();
+            var updatedBird = new BirdDto { Name = "New Name" };
+            _mockBirdRepository.Setup(repo => repo.GetByIdAsync(birdId)).ReturnsAsync((Bird)null);
 
-//            // Act
-//            var result = await _handler.Handle(command, CancellationToken.None);
+            var command = new UpdateBirdByIdCommand(updatedBird, birdId);
+            var result = await _handler.Handle(command, CancellationToken.None);
 
-//            // Assert
-//            Assert.NotNull(result);
-//            Assert.IsInstanceOf<Cat>(result);
-
-//            //kolla om hunden har det uppdaterade namnet 
-//            Assert.That(result.Name, Is.EqualTo("UpdatedCatName"));
-
-//            // kolla om hunden har uppdaterats i mocken också
-//            var updatedCatInDatabase = _mockDatabase.Cats.FirstOrDefault(cat => cat.Id == command.Id);
-//            Assert.That(updatedCatInDatabase, Is.Not.Null);
-//            Assert.That(updatedCatInDatabase.Name, Is.EqualTo("UpdatedCatName"));
-//        }
-
-//    }
-//}
+            Assert.IsNull(result);
+        }
+    }
+}
