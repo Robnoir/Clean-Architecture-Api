@@ -33,20 +33,27 @@ namespace API.Controllers.UserAnimalController
             return Ok(result);
         }
 
-        [HttpPost]
-        [Route("AddUserAnimal")]
-        public async Task<IActionResult> AddUserAnimal([FromBody] UserAnimalDto userAnimalDto)
-        {
-            var validationResult = _UserAnimalValidator.Validate(userAnimalDto);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }
+      [HttpPost]
+[Route("AddUserAnimal")]
+public async Task<IActionResult> AddUserAnimal([FromBody] UserAnimalDto userAnimalDto)
+{
+    var validationResult = _UserAnimalValidator.Validate(userAnimalDto);
+    if (!validationResult.IsValid)
+    {
+        return BadRequest(validationResult.Errors);
+    }
 
-            var command = new AddUserAnimalCommand(userAnimalDto.UserId, userAnimalDto.AnimalId);
-            var result = await _mediator.Send(command);
-            return result != null ? Ok(result) : BadRequest("Failed to add user animal relationship.");
-        }
+    var command = new AddUserAnimalCommand
+    {
+        UserId = userAnimalDto.UserId,
+        AnimalId = userAnimalDto.AnimalId
+       
+    };
+
+    var result = await _mediator.Send(command);
+    return result != null ? Ok(result) : BadRequest("Failed to add user animal relationship.");
+}
+
 
 
         [HttpDelete("DeleteRelationShip/{userId}/{animalModelId}")]
