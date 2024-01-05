@@ -20,8 +20,6 @@ public class DogRepository : IDogRepository
         _realDatabase.Dogs.Add(dogToCreate);
         _realDatabase.SaveChanges();
         return await Task.FromResult(dogToCreate);
-
-
     }
     public async Task DeleteAsync(Guid dogId)
     {
@@ -42,6 +40,24 @@ public class DogRepository : IDogRepository
     {
         return await _realDatabase.Dogs.FindAsync(dogId);
     }
+
+    public async Task<List<Dog>> GetDogByBreedAndWeight(string breed, int? weight)
+    {
+        var query = _realDatabase.Dogs.AsQueryable();
+
+        if (!string.IsNullOrEmpty(breed))
+        {
+            query = query.Where(d => d.DogBreed == breed);
+        }
+
+        if (weight.HasValue)
+        {
+            query = query.Where(d => d.DogWeight == weight);
+        }
+
+        return await query.ToListAsync();
+    }
+
     public async Task UpdateAsync(Dog dog)
     {
         _realDatabase.Dogs.Update(dog);

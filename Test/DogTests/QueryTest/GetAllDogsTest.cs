@@ -1,39 +1,62 @@
-//using System.Diagnostics.CodeAnalysis;
-//using Application.Queries.Dogs.GetAll;
-//using Application.Queries.Dogs.GetById;
-//using Application.Commands.Dogs;
-//using Infrastructure.Database;
-//using Application.Queries.Dogs;
+using Application.Queries.Dogs;
+using Application.Queries.Dogs.GetAll;
+using Domain.Models;
+using Infrastructure;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
+namespace Test.DogTests.QueryTest
+{
+    [TestFixture]
+    public class GetAllDogsTest
+    {
+        private Mock<IDogRepository> _dogRepositoryMock;
+        private GetAllDogsQueryHandler _handler;
+        private Mock<ILogger<GetAllDogsQueryHandler>> _loggerMock;
 
-//namespace Test.GetAllDogsTests.QueryTest
-//{
-//    [TestFixture]
-//    public class GetAllDogsTests
-//    {
-//        private GetAllDogsQueryHandler _handler;
-//        private MockDatabase _mockDatabase;
-//        [SetUp]
-//        public void SetUp()
-//        {
-//            _mockDatabase = new MockDatabase();
-//            _handler = new(_mockDatabase);
-//        }
-//        [Test]
-//        public async Task GetAllDogs_ShouldReturnallDogsInList()
-//        {
-//            // Arrange
-//            int expectedNumberOfDogs = 5; // Checks how many dogs is in the mockDB List
+        [SetUp]
+        public void SetUp()
+        {
+            _dogRepositoryMock = new Mock<IDogRepository>();
+            _loggerMock = new Mock<ILogger<GetAllDogsQueryHandler>>();
+            _handler = new GetAllDogsQueryHandler(_dogRepositoryMock.Object);
+        }
 
-//            // Act
-//            var result = await _handler.Handle(new GetAllDogsQuery(), CancellationToken.None);
+        [Test]
+        public async Task GetAllDogs_WhenDogsExist_ReturnsAllDogs()
+        {
+            // Arrange
+            var fakeDogs = new List<Dog> { new Dog(), new Dog() };
+            _dogRepositoryMock.Setup(repo => repo.GetAllDogsAsync())
+                              .ReturnsAsync(fakeDogs);
 
-//            // Assert
-//            Assert.NotNull(result);
-//            Assert.That(result.Count, Is.EqualTo(expectedNumberOfDogs));
+            // Act
+            var query = new GetAllDogsQuery();
+            var result = await _handler.Handle(query, CancellationToken.None);
 
+            // Assert
+            Assert.That(result.Count, Is.EqualTo(2));
+            _dogRepositoryMock.Verify(repo => repo.GetAllDogsAsync(), Times.Once);
+        }
 
-//        }
+        [Test]
+        public async Task GetAllDogs_WhenRepositoryReturnsNull_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            _dogRepositoryMock.Setup(repo => repo.GetAllDogsAsync())
+                              .ReturnsAsync((List<Dog>)null);
 
-//    }
-//}
+            // Act
+            var query = new GetAllDogsQuery();
+
+            // Assert
+            Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(query, CancellationToken.None));
+            _dogRepositoryMock.Verify(repo => repo.GetAllDogsAsync(), Times.Once);
+        }
+    }
+}

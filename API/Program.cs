@@ -1,3 +1,4 @@
+#nullable enable
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Application;
@@ -6,10 +7,20 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Serilog;
+using FluentValidation.AspNetCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .WriteTo.Console()
+    .CreateLogger();
+
+builder.Services.AddLogging();
+
 
 
 
@@ -25,10 +36,14 @@ builder.Services.AddControllers(options =>
     options.Filters.Add(new AuthorizeFilter(policy));
 });
 
+
+
+
+
 builder.Services.AddSwaggerGen(SwaggerConfig =>
 {
     // Creating a Swagger document.
-    SwaggerConfig.SwaggerDoc("v1", new OpenApiInfo { Title = "API Animal", Version = "v1" });
+    SwaggerConfig.SwaggerDoc("v1", new OpenApiInfo { Title = "API AnimalModel", Version = "v1" });
 
     // Adding JWT Authentication definition to Swagger.
     // This allows Swagger UI to send the JWT token in the Authorization header.

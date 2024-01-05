@@ -1,37 +1,59 @@
 ﻿using Application.Queries.Cats.GetAll;
-using Infrastructure.Database;
+using Domain.Models;
+using Infrastructure.Database.Repositories.CatRepo;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Test.Cat_Test.QueryTest
+namespace Test.CatTests.QueryTest
 {
     [TestFixture]
-    internal class GetAllCatsTest
+    public class GetAllCatsTest
     {
+        private Mock<ICatRepository> _catRepositoryMock;
         private GetAllCatsQueryHandler _handler;
-        private MockDatabase _mockDatabase;
+
         [SetUp]
         public void SetUp()
         {
-            _mockDatabase = new MockDatabase();
-            _handler = new(_mockDatabase);
+            _catRepositoryMock = new Mock<ICatRepository>();
+            _handler = new GetAllCatsQueryHandler(_catRepositoryMock.Object);
         }
+
         [Test]
-        public async Task GetAllCats_ShouldReturnAllCatsInList()
+        public async Task GetAllCats_WhenCatsExist_ReturnsAllCats()
         {
-            //Arrange
-            int expectedNumberOfCats = 5;
+            // Arrange
+            var fakeCats = new List<Cat> { new Cat(), new Cat() };
+            _catRepositoryMock.Setup(repo => repo.GetAllCatsAsync())
+                              .ReturnsAsync(fakeCats);
 
-            //Act
-            var result = await _handler.Handle(new GetAllCatsQuery(), CancellationToken.None);
+            // Act
+            var query = new GetAllCatsQuery();
+            var result = await _handler.Handle(query, CancellationToken.None);
 
-            //Assert
-            Assert.NotNull(result);
-            Assert.That(result.Count, Is.EqualTo(expectedNumberOfCats));
+            // Assert
+            Assert.That(result.Count, Is.EqualTo(2));
+            _catRepositoryMock.Verify(repo => repo.GetAllCatsAsync(), Times.Once);
+        }
 
+        [Test]
+        public async Task GetAllCats_WhenRepositoryReturnsNull_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            _catRepositoryMock.Setup(repo => repo.GetAllCatsAsync())
+                              .ReturnsAsync((List<Cat>)null);
+
+            // Act
+            var query = new GetAllCatsQuery();
+
+            // Assert
+            Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(query, CancellationToken.None));
+            _catRepositoryMock.Verify(repo => repo.GetAllCatsAsync(), Times.Once);
         }
     }
 }
