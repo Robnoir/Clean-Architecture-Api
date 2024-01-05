@@ -1,59 +1,61 @@
-﻿//using Application.Queries.Cats.GetById;
-//using Infrastructure.Database;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Security.Cryptography.Xml;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using Application.Queries.Cats.GetById;
+using Domain.Models;
+using Infrastructure.Database.Repositories.CatRepo;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-//namespace Test.Cat_Test.QueryTest
-//{
-//    [TestFixture]
-//    public class GetCatByIdTest
-//    {
-//        private GetCatByIdQueryHandler _handler;
-//        private MockDatabase _mockDatabase;
+namespace Test.CatTests.QueryTest
+{
+    [TestFixture]
+    public class GetCatByIdTests
+    {
+        private Mock<ICatRepository> _catRepositoryMock;
+        private GetCatByIdQueryHandler _handler;
 
-//        [SetUp]
-//        public void SetUp()
-//        {
-//            //Initialize the handler and mock database before each test
-//            _mockDatabase = new MockDatabase();
-//            _handler = new GetCatByIdQueryHandler(_mockDatabase);
+        [SetUp]
+        public void SetUp()
+        {
+            _catRepositoryMock = new Mock<ICatRepository>();
+            _handler = new GetCatByIdQueryHandler(_catRepositoryMock.Object);
+        }
 
-//        }
+        [Test]
+        public async Task Handle_ValidId_ReturnsCorrectCat()
+        {
+            // Arrange
+            var catId = Guid.NewGuid();
+            var cat = new Cat { Id = catId, Name = "Whiskers" };
+            _catRepositoryMock.Setup(repo => repo.GetByIdAsync(catId)).ReturnsAsync(cat);
 
-//        [Test]
-//        public async Task Handle_ValidId_ReturnsCorrectCat()
-//        {
-//            //Arrange 
-//            var catId = new Guid("12345678-1234-5678-1234-567812345611");
-//            var query = new GetCatByIdQuery(catId);
+            var query = new GetCatByIdQuery(catId);
 
-//            //Act
-//            var result = await _handler.Handle(query, CancellationToken.None);
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
 
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.Id, Is.EqualTo(catId));
+            Assert.That(result.Name, Is.EqualTo("Whiskers"));
+        }
 
-//            //Assert
-//            Assert.IsNotNull(result);
-//            Assert.That(result.Id, Is.EqualTo(catId));
+        [Test]
+        public async Task Handle_InvalidId_ReturnsNull()
+        {
+            // Arrange
+            var invalidCatId = Guid.NewGuid();
+            _catRepositoryMock.Setup(repo => repo.GetByIdAsync(invalidCatId)).ReturnsAsync((Cat)null);
 
-//        }
-//        [Test]
-//        public async Task Handle_InvalidId_ReturnsNull()
-//        {
-//            // Arrange
-//            var invalidCatId = Guid.NewGuid();
+            var query = new GetCatByIdQuery(invalidCatId);
 
-//            var query = new GetCatByIdQuery(invalidCatId);
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
 
-//            // Act
-//            var result = await _handler.Handle(query, CancellationToken.None);
-
-//            // Assert
-//            Assert.IsNull(result);
-//        }
-
-//    }
-//}
+            // Assert
+            Assert.IsNull(result);
+        }
+    }
+}

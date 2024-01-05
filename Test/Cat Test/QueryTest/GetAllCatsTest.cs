@@ -1,37 +1,59 @@
-﻿//using Application.Queries.Cats.GetAll;
-//using Infrastructure.Database;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using Application.Queries.Cats.GetAll;
+using Domain.Models;
+using Infrastructure.Database.Repositories.CatRepo;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
-//namespace Test.Cat_Test.QueryTest
-//{
-//    [TestFixture]
-//    internal class GetAllCatsTest
-//    {
-//        private GetAllCatsQueryHandler _handler;
-//        private MockDatabase _mockDatabase;
-//        [SetUp]
-//        public void SetUp()
-//        {
-//            _mockDatabase = new MockDatabase();
-//            _handler = new(_mockDatabase);
-//        }
-//        [Test]
-//        public async Task GetAllCats_ShouldReturnAllCatsInList()
-//        {
-//            //Arrange
-//            int expectedNumberOfCats = 5;
+namespace Test.CatTests.QueryTest
+{
+    [TestFixture]
+    public class GetAllCatsTest
+    {
+        private Mock<ICatRepository> _catRepositoryMock;
+        private GetAllCatsQueryHandler _handler;
 
-//            //Act
-//            var result = await _handler.Handle(new GetAllCatsQuery(), CancellationToken.None);
+        [SetUp]
+        public void SetUp()
+        {
+            _catRepositoryMock = new Mock<ICatRepository>();
+            _handler = new GetAllCatsQueryHandler(_catRepositoryMock.Object);
+        }
 
-//            //Assert
-//            Assert.NotNull(result);
-//            Assert.That(result.Count, Is.EqualTo(expectedNumberOfCats));
+        [Test]
+        public async Task GetAllCats_WhenCatsExist_ReturnsAllCats()
+        {
+            // Arrange
+            var fakeCats = new List<Cat> { new Cat(), new Cat() };
+            _catRepositoryMock.Setup(repo => repo.GetAllCatsAsync())
+                              .ReturnsAsync(fakeCats);
 
-//        }
-//    }
-//}
+            // Act
+            var query = new GetAllCatsQuery();
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            Assert.That(result.Count, Is.EqualTo(2));
+            _catRepositoryMock.Verify(repo => repo.GetAllCatsAsync(), Times.Once);
+        }
+
+        [Test]
+        public async Task GetAllCats_WhenRepositoryReturnsNull_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            _catRepositoryMock.Setup(repo => repo.GetAllCatsAsync())
+                              .ReturnsAsync((List<Cat>)null);
+
+            // Act
+            var query = new GetAllCatsQuery();
+
+            // Assert
+            Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(query, CancellationToken.None));
+            _catRepositoryMock.Verify(repo => repo.GetAllCatsAsync(), Times.Once);
+        }
+    }
+}

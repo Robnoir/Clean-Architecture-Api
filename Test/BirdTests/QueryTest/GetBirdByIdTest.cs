@@ -1,57 +1,62 @@
-﻿//using Application.Queries.Birds.GetById;
-//using Infrastructure.Database;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using static Application.Queries.Birds.GetById.GetBirdByIdQuerryHandler;
+﻿using Application.Queries.Birds.GetById;
+using Domain.Models;
+using Infrastructure.Database.Repositories.BirdRepo;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-//namespace Test.BirdTests.QueryTest
-//{
-//    [TestFixture]
-//    public class GetBirdByIdTest
-//    {
-//        private GetBirdByIdQueryHandler _handler;
-//        private MockDatabase _mockDatabase;
+namespace Test.BirdTests.QueryTest
+{
+    [TestFixture]
+    public class GetBirdsByIdTests
+    {
+        private Mock<IBirdRepository> _birdRepositoryMock;
+        private GetBirdByIdQueryHandler _handler;
 
-//        [SetUp]
-//        public void SetUp()
-//        {
-//            // Initialize the handler and mock database before each test
-//            _mockDatabase = new MockDatabase();
-//            _handler = new GetBirdByIdQueryHandler(_mockDatabase);
-//        }
 
-//        [Test]
-//        public async Task Handle_ValidId_ReturnsCorrectBird()
-//        {
-//            // Arrange 
-//            var birdId = new Guid("12345678-1234-5678-1234-567812345612"); // Use an ID that would correspond to a bird in the mock database
-//            var query = new GetBirdByIdQuery(birdId);
+        [SetUp]
+        public void SetUp()
+        {
+            _birdRepositoryMock = new Mock<IBirdRepository>();
+            _handler = new GetBirdByIdQueryHandler(_birdRepositoryMock.Object);
+        }
 
-//            // Act
-//            var result = await _handler.Handle(query, CancellationToken.None);
+        [Test]
+        public async Task Handle_ValidId_ReturnsCorrectBird()
+        {
+            // Arrange
+            var birdId = Guid.NewGuid();
+            var bird = new Bird { Id = birdId, Name = "Chirpy" };
+            _birdRepositoryMock.Setup(repo => repo.GetByIdAsync(birdId)).ReturnsAsync(bird);
 
-//            // Assert
-//            Assert.IsNotNull(result);
-//            Assert.That(result.Id, Is.EqualTo(birdId));
-//        }
+            var query = new GetBirdByIdQuery(birdId);
 
-//        [Test]
-//        public async Task Handle_InvalidId_ReturnsNull()
-//        {
-//            // Arrange
-//            var invalidBirdId = Guid.NewGuid(); // Ensure this ID does not exist in the mock database
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
 
-//            var query = new GetBirdByIdQuery(invalidBirdId);
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.Id, Is.EqualTo(birdId));
+            Assert.That(result.Name, Is.EqualTo("Chirpy"));
+        }
 
-//            // Act
-//            var result = await _handler.Handle(query, CancellationToken.None);
+        [Test]
+        public async Task Handle_InvalidId_ReturnsNull()
+        {
+            // Arrange
+            var invalidBirdId = Guid.NewGuid();
+            _birdRepositoryMock.Setup(repo => repo.GetByIdAsync(invalidBirdId)).ReturnsAsync((Bird)null);
 
-//            // Assert
-//            Assert.IsNull(result);
-//        }
-//    }
+            var query = new GetBirdByIdQuery(invalidBirdId);
 
-//}
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+    }
+}
