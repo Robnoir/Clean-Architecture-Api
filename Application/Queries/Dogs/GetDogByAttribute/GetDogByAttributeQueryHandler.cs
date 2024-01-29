@@ -15,7 +15,7 @@ namespace Application.Queries.Dogs.GetDogByAttribute
 
         public GetDogByAttributeQueryHandler(IDogRepository dogRepository)
         {
-            _dogRepository = dogRepository; 
+            _dogRepository = dogRepository;
         }
 
         public async Task<IEnumerable<Dog>> Handle(GetDogByAttributeQuery request, CancellationToken cancellationToken)

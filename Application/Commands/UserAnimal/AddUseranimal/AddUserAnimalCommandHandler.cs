@@ -31,7 +31,7 @@ namespace Application.Commands.UserAnimal.AddUseranimal
                 {
                     UserId = userAnimal.UserId,
                     AnimalId = userAnimal.AnimalId
-                    
+
                 };
 
                 _logger.LogInformation("Successfully added user animal relationship: {UserAnimalDto}", userAnimalDto);

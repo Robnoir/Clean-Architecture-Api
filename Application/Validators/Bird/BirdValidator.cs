@@ -12,7 +12,7 @@ namespace Application.Validators.Bird
     public class BirdValidator : AbstractValidator<BirdDto>
     {
 
-        public BirdValidator() 
+        public BirdValidator()
         {
             RuleFor(bird => bird.Name)
                 .NotEmpty().WithMessage("Bird name can not be empty")
@@ -24,7 +24,7 @@ namespace Application.Validators.Bird
 
 
         }
-        
+
 
 
     }

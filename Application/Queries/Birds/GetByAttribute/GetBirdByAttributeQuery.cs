@@ -11,11 +11,11 @@ namespace Application.Queries.Birds.GetByAttribute
 {
     public class GetBirdByAttributeQuery : IRequest<List<Bird>>
     {
-        public string Color { get;}
+        public string Color { get; }
         public GetBirdByAttributeQuery(string color)
         {
             Color = color;
         }
-       
+
     }
 }

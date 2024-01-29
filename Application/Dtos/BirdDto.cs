@@ -11,7 +11,7 @@ namespace Application.Dtos
         public string Name { get; set; } = string.Empty;
         public bool CanFly { get; set; }
         public string BirdColor { get; set; }
-       
+
 
     }
 }

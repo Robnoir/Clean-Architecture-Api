@@ -18,7 +18,7 @@ namespace API.Controllers.UserAnimalController
     {
         private readonly IMediator _mediator;
         private readonly UserAnimalValidator _userAnimalValidator;
-        private readonly GuidValidator _guidValidator; 
+        private readonly GuidValidator _guidValidator;
 
         public UserAnimalsController(IMediator mediator, UserAnimalValidator userAnimalValidator, GuidValidator guidValidator)
         {

@@ -53,7 +53,7 @@ namespace Infrastructure.Database.Repositories.UserRepo
             await _realDatabase.SaveChangesAsync();
         }
 
-      
+
 
         public async Task<User> GetUserByUsernameAsync(string username)
         {
