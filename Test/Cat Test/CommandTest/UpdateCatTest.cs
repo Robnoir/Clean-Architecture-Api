@@ -1,59 +1,64 @@
 ﻿using Application.Commands.Cats.UpdateCat;
 using Application.Dtos;
 using Domain.Models;
-using Infrastructure.Database;
+using Infrastructure.Database.Repositories.CatRepo;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Test.Cat_Test.CommandTest
 {
     [TestFixture]
-    internal class UpdateDogTest
+    internal class UpdateCatTest
     {
-        //Initializes the mockdatabase and handler before every test
-
+        private Mock<ICatRepository> _mockCatRepository;
+        private Mock<ILogger<UpdateCatByIdCommandHandler>> _mockLogger;
         private UpdateCatByIdCommandHandler _handler;
-        private MockDatabase _mockDatabase;
 
         [SetUp]
         public void Setup()
         {
-
-            _mockDatabase = new MockDatabase();
-            _handler = new UpdateCatByIdCommandHandler(_mockDatabase);
+            _mockCatRepository = new Mock<ICatRepository>();
+            _mockLogger = new Mock<ILogger<UpdateCatByIdCommandHandler>>();
+            _handler = new UpdateCatByIdCommandHandler(_mockCatRepository.Object, _mockLogger.Object);
         }
 
         [Test]
-        public async Task Handle_UpdatedDogInDB()
+        public async Task Handle_ShouldUpdateCat_WhenCatExists()
         {
             // Arrange
-            var InitCat = new Cat { Id = Guid.NewGuid(), Name = "" };
-            _mockDatabase.Cats.Add(InitCat);
+            var catId = Guid.NewGuid();
+            var existingCat = new Cat { Id = catId, Name = "Old Cat" };
+            _mockCatRepository.Setup(repo => repo.GetByIdAsync(catId)).ReturnsAsync(existingCat);
+            _mockCatRepository.Setup(repo => repo.UpdateAsync(It.IsAny<Cat>())).Returns(Task.CompletedTask);
 
-            //skapar en instans av updatedog
-            var command = new UpdateCatByIdCommand(
-                updatedCat: new CatDto { Name = "UpdatedCatName" },
-                id: InitCat.Id
-            );
+            var command = new UpdateCatByIdCommand(new CatDto { Name = "New Cat" }, catId);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.IsInstanceOf<Cat>(result);
-
-            //kolla om hunden har det uppdaterade namnet 
-            Assert.That(result.Name, Is.EqualTo("UpdatedCatName"));
-
-            // kolla om hunden har uppdaterats i mocken också
-            var updatedCatInDatabase = _mockDatabase.Cats.FirstOrDefault(cat => cat.Id == command.Id);
-            Assert.That(updatedCatInDatabase, Is.Not.Null);
-            Assert.That(updatedCatInDatabase.Name, Is.EqualTo("UpdatedCatName"));
+            Assert.IsNotNull(result);
+            Assert.That(result.Name, Is.EqualTo("New Cat"));
         }
 
+        [Test]
+        public async Task Handle_ShouldReturnNull_WhenCatDoesNotExist()
+        {
+            // Arrange
+            var catId = Guid.NewGuid();
+            _mockCatRepository.Setup(repo => repo.GetByIdAsync(catId)).ReturnsAsync((Cat)null);
+
+            var command = new UpdateCatByIdCommand(new CatDto { Name = "New Cat" }, catId);
+
+            // Act
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.IsNull(result);
+        }
     }
 }

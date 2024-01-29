@@ -1,6 +1,8 @@
 ﻿using Domain.Models;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.CatRepo;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,27 +13,40 @@ namespace Application.Commands.Cats.DeleteCat
 {
     public class DeleteCatByIdCommandHandler : IRequestHandler<DeleteCatByIdCommand, Cat>
     {
-        private readonly MockDatabase _mockDatabase;
-        public DeleteCatByIdCommandHandler(MockDatabase mockDatabase)
+        private readonly ICatRepository _catRepository;
+        private readonly ILogger<DeleteCatByIdCommandHandler> _logger;
+
+        public DeleteCatByIdCommandHandler(ICatRepository catRepository, ILogger<DeleteCatByIdCommandHandler> logger)
         {
-            _mockDatabase = mockDatabase;
+            _catRepository = catRepository;
+            _logger = logger;
         }
 
-        public Task<Cat> Handle(DeleteCatByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Cat> Handle(DeleteCatByIdCommand request, CancellationToken cancellationToken)
         {
-            var catToDelete = _mockDatabase.Cats.FirstOrDefault(cat => cat.Id == request.Id);
-
-            if (catToDelete != null)
+            try
             {
-                _mockDatabase.Cats.Remove(catToDelete);
-            }
-            else
-            {
-                // Throw an exception or handle the null case as needed for your application
-                throw new InvalidOperationException("No cat with the given ID was found.");
-            }
+                _logger.LogInformation("Attempting to delete cat with ID: {CatId}", request.Id);
 
-            return Task.FromResult(catToDelete);
+                Cat catToDelete = await _catRepository.GetByIdAsync(request.Id);
+
+                if (catToDelete == null)
+                {
+                    _logger.LogWarning("No cat found with ID: {CatId}", request.Id);
+                    throw new InvalidOperationException("No cat with the given id was found");
+                }
+
+                await _catRepository.DeleteAsync(request.Id);
+
+                _logger.LogInformation("Cat successfully deleted with ID: {CatId}", request.Id);
+
+                return catToDelete;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting cat with ID: {CatId}", request.Id);
+                throw;
+            }
         }
 
     }

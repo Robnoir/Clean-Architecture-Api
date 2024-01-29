@@ -1,41 +1,76 @@
 ﻿using Application.Commands.Cats.AddCat;
 using Application.Dtos;
-using Infrastructure.Database;
+using Domain.Models;
+using Infrastructure.Database.Repositories.CatRepo;
+using MediatR;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Test.Cat_Test.CommandTest
+namespace Test.CatTests.CommandTest
 {
-    internal class AddCatTest
+    [TestFixture]
+    public class AddCatTest
     {
-        private MockDatabase _mockDatabase;
-        private AddCatCommandHandler _handler;
+        private Mock<ICatRepository> _mockCatRepository;
+        private Mock<ILogger<AddCatCommandHandler>> _mockLogger;
+        private IRequestHandler<AddCatCommand, Cat> _handler;
 
         [SetUp]
         public void SetUp()
         {
-            // Initialisera mockdatabasen och hanteraren innan varje test
-            _mockDatabase = new MockDatabase();
-            _handler = new AddCatCommandHandler(_mockDatabase);
+            _mockCatRepository = new Mock<ICatRepository>();
+            _mockLogger = new Mock<ILogger<AddCatCommandHandler>>();
+            _handler = new AddCatCommandHandler(_mockCatRepository.Object, _mockLogger.Object);
         }
 
         [Test]
-        public async Task Handle_ChecksAddedDog_ReturnTrue()
+        public async Task Handle_ShouldAddCat_WhenValidDataIsProvided()
         {
-            // Arrange
-            var command = new AddCatCommand(new CatDto { Name = "MioMao" });
+            var catDto = new CatDto
+            {
+                Name = "Nugget",
+                LikesToPlay = true,
+                Breed = "Fluffy",
+                Weight = 2
+            };
+            var command = new AddCatCommand(catDto);
+            var expectedCat = new Cat
+            {
+                Id = Guid.NewGuid(),
+                Name = catDto.Name,
+                LikesToPlay = catDto.LikesToPlay,
+                CatBreed = catDto.Breed,
+                CatWeight = catDto.Weight
+            };
+            _mockCatRepository.Setup(repo => repo.AddAsync(It.IsAny<Cat>())).ReturnsAsync(expectedCat);
 
-            // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
-            var newCatToDB = _mockDatabase.Cats.FirstOrDefault(cat => cat.Name == "MioMao");
+            _mockCatRepository.Verify(repo => repo.AddAsync(It.Is<Cat>(c => c.Name == catDto.Name)), Times.Once());
+            Assert.That(result.Name, Is.EqualTo(catDto.Name));
+            Assert.That(result.CatWeight, Is.EqualTo(catDto.Weight));
+        }
 
-            Assert.IsNotNull(newCatToDB);
-            Assert.That(newCatToDB.Name, Is.EqualTo("MioMao"));
+        [Test]
+        public void Handle_ShouldThrowException_WhenInvalidDataIsProvided()
+        {
+            var catDto = new CatDto
+            {
+                Name = "", // Invalid data: empty name
+                LikesToPlay = true,
+                Breed = "Fluffy",
+                Weight = 2
+            };
+            var command = new AddCatCommand(catDto);
+
+            _mockCatRepository.Setup(repo => repo.AddAsync(It.IsAny<Cat>())).ThrowsAsync(new ArgumentException("Name cannot be empty"));
+
+            var ex = Assert.ThrowsAsync<ArgumentException>(() => _handler.Handle(command, CancellationToken.None));
+            Assert.That(ex.Message, Is.EqualTo("Name cannot be empty"));
         }
     }
 }

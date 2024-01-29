@@ -1,4 +1,7 @@
-﻿using Domain.Models;
+﻿using System.Data.Common;
+using System.Security;
+using Domain.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Database
 {
@@ -21,7 +24,19 @@ namespace Infrastructure.Database
             get { return allBirds; }
             set { allBirds = value; }
         }
+        public List<User> Users
+        {
+            get { return allUsers; }
+            set { allUsers = value; }
+        }
 
+        public List<User> allUsers = new()
+        {
+            new User {Id = Guid.NewGuid(), Username = "rob", PasswordHash = "Rob123" },
+            new User {Id = Guid.NewGuid(),Username = "stefan", PasswordHash = "Stefan123"},
+            new User {Id = Guid.NewGuid(),Username = "Navjet", PasswordHash = "navjet123"},
+            new User {Id = new Guid("12345678-1234-5678-1234-567812345614"), Username = "TestDeleteUser", PasswordHash = "TestDelete"}
+        };
 
         public List<Dog> allDogs = new()
         {

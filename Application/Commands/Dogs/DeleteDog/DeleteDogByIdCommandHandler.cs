@@ -1,40 +1,49 @@
 ﻿using Domain.Models;
+using Infrastructure;
 using Infrastructure.Database;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Application.Commands.Dogs.DeleteDog
 {
     public class DeleteDogByIdCommandHandler : IRequestHandler<DeleteDogByIdCommand, Dog>
     {
-        private readonly MockDatabase _mockDatabase;
+        private readonly IDogRepository _dogRepository;
+        private readonly ILogger<DeleteDogByIdCommandHandler> _logger;
 
-        public DeleteDogByIdCommandHandler(MockDatabase mockDatabase)
+        public DeleteDogByIdCommandHandler(IDogRepository dogRepository, ILogger<DeleteDogByIdCommandHandler> logger)
         {
-            _mockDatabase = mockDatabase;
+            _dogRepository = dogRepository;
+            _logger = logger;
         }
 
-
-        public Task<Dog> Handle(DeleteDogByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Dog> Handle(DeleteDogByIdCommand request, CancellationToken cancellationToken)
         {
-            var dogToDelete = _mockDatabase.Dogs.FirstOrDefault(dog => dog.Id == request.Id);
-
-            if (dogToDelete != null)
+            try
             {
-                _mockDatabase.Dogs.Remove(dogToDelete);
-            }
-            else
-            {
-                // Throw an exception or handle the null case as needed for your application
-                throw new InvalidOperationException("No dog with the given ID was found.");
-            }
+                _logger.LogInformation("Attempting to delete dog with ID: {DogId}", request.Id);
 
-            return Task.FromResult(dogToDelete);
+                Dog dogToDelete = await _dogRepository.GetByIdAsync(request.Id);
+                if (dogToDelete == null)
+                {
+                    _logger.LogWarning("No dog found with ID: {DogId}", request.Id);
+                    throw new InvalidOperationException("No dog with the given Id was found");
+                }
+
+                await _dogRepository.DeleteAsync(request.Id);
+
+                _logger.LogInformation("Dog successfully deleted with ID: {DogId}", request.Id);
+
+                return dogToDelete;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting dog with ID: {DogId}", request.Id);
+                throw;
+            }
         }
-
     }
 }

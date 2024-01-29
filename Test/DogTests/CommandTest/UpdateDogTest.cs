@@ -1,11 +1,13 @@
 ﻿using Application.Commands.Dogs.UpdateDog;
 using Application.Dtos;
 using Domain.Models;
+using Infrastructure;
 using Infrastructure.Database;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Test.DogTests.CommandTest
@@ -13,46 +15,45 @@ namespace Test.DogTests.CommandTest
     [TestFixture]
     internal class UpdateDogTest
     {
-        //Initializes the mockdatabase and handler before every test
+        private Mock<IDogRepository> _mockDogRepository;
+        private Mock<ILogger<UpdateDogByIdCommandHandler>> _mockLogger;
         private UpdateDogByIdCommandHandler _handler;
-        private MockDatabase _mockDatabase;
 
         [SetUp]
         public void Setup()
         {
-
-            _mockDatabase = new MockDatabase();
-            _handler = new UpdateDogByIdCommandHandler(_mockDatabase);
+            _mockDogRepository = new Mock<IDogRepository>();
+            _mockLogger = new Mock<ILogger<UpdateDogByIdCommandHandler>>();
+            _handler = new UpdateDogByIdCommandHandler(_mockDogRepository.Object, _mockLogger.Object);
         }
 
         [Test]
-        public async Task Handle_UpdatedDogInDB()
+        public async Task Handle_ShouldUpdateDog_WhenDogExists()
         {
-            // Arrange
-            var InitDog = new Dog { Id = Guid.NewGuid(), Name = "" };
-            _mockDatabase.Dogs.Add(InitDog);
+            var dogId = Guid.NewGuid();
+            var existingDog = new Dog { Id = dogId, Name = "Old Name" };
+            var updatedDogDto = new DogDto { Name = "New Name" };
+            _mockDogRepository.Setup(repo => repo.GetByIdAsync(dogId)).ReturnsAsync(existingDog);
+            _mockDogRepository.Setup(repo => repo.UpdateAsync(It.IsAny<Dog>())).Returns(Task.CompletedTask);
 
-            //skapar en instans av updatedog
-            var command = new UpdateDogByIdCommand(
-                updatedDog: new DogDto { Name = "UpdatedDogName" },
-                id: InitDog.Id
-            );
-
-            // Act
+            var command = new UpdateDogByIdCommand(updatedDogDto, dogId);
             var result = await _handler.Handle(command, CancellationToken.None);
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.IsInstanceOf<Dog>(result);
-
-            //kolla om hunden har det uppdaterade namnet 
-            Assert.That(result.Name, Is.EqualTo("UpdatedDogName"));
-
-            // kolla om hunden har uppdaterats i mocken också
-            var updatedDogInDatabase = _mockDatabase.Dogs.FirstOrDefault(dog => dog.Id == command.Id);
-            Assert.That(updatedDogInDatabase, Is.Not.Null);
-            Assert.That(updatedDogInDatabase.Name, Is.EqualTo("UpdatedDogName"));
+            Assert.IsNotNull(result);
+            Assert.That(result.Name, Is.EqualTo("New Name"));
         }
 
+        [Test]
+        public async Task Handle_ShouldReturnNull_WhenDogDoesNotExist()
+        {
+            var dogId = Guid.NewGuid();
+            var updatedDogDto = new DogDto { Name = "New Name" };
+            _mockDogRepository.Setup(repo => repo.GetByIdAsync(dogId)).ReturnsAsync((Dog)null);
+
+            var command = new UpdateDogByIdCommand(updatedDogDto, dogId);
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            Assert.IsNull(result);
+        }
     }
 }

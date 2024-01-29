@@ -1,5 +1,12 @@
 ﻿using Application.Queries.Dogs.GetById;
-using Infrastructure.Database;
+using Domain.Models;
+using Infrastructure;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Test.DogTests.QueryTest
 {
@@ -7,22 +14,22 @@ namespace Test.DogTests.QueryTest
     public class GetDogByIdTests
     {
         private GetDogByIdQueryHandler _handler;
-        private MockDatabase _mockDatabase;
+        private Mock<IDogRepository> _dogRepositoryMock;
 
         [SetUp]
         public void SetUp()
         {
-            // Initialize the handler and mock database before each test
-            _mockDatabase = new MockDatabase();
-            _handler = new GetDogByIdQueryHandler(_mockDatabase);
+            _dogRepositoryMock = new Mock<IDogRepository>();
+            _handler = new GetDogByIdQueryHandler(_dogRepositoryMock.Object);
         }
 
-        //Test for returning the correct dog searched by a specifik ID
         [Test]
         public async Task Handle_ValidId_ReturnsCorrectDog()
         {
             // Arrange
             var dogId = new Guid("12345678-1234-5678-1234-567812345678");
+            var dog = new Dog { Id = dogId, Name = "Rio" };
+            _dogRepositoryMock.Setup(repo => repo.GetByIdAsync(dogId)).ReturnsAsync(dog);
 
             var query = new GetDogByIdQuery(dogId);
 
@@ -30,8 +37,9 @@ namespace Test.DogTests.QueryTest
             var result = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
+            Assert.IsNotNull(result);
             Assert.That(result.Id, Is.EqualTo(dogId));
+            Assert.That(result.Name, Is.EqualTo("Rio"));
         }
 
         [Test]
@@ -39,6 +47,7 @@ namespace Test.DogTests.QueryTest
         {
             // Arrange
             var invalidDogId = Guid.NewGuid();
+            _dogRepositoryMock.Setup(repo => repo.GetByIdAsync(invalidDogId)).ReturnsAsync((Dog)null);
 
             var query = new GetDogByIdQuery(invalidDogId);
 
@@ -48,8 +57,5 @@ namespace Test.DogTests.QueryTest
             // Assert
             Assert.IsNull(result);
         }
-
-
     }
 }
-

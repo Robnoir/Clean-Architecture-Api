@@ -1,6 +1,8 @@
 ﻿using Domain.Models;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.BirdRepo;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,29 +14,43 @@ namespace Application.Commands.Birds.DeleteBird
     public class DeleteBirdByIdCommandHandler : IRequestHandler<DeleteBirdByIdCommand, Bird>
     {
 
-        private readonly MockDatabase _mockDatabase;
-        public DeleteBirdByIdCommandHandler(MockDatabase mockDatabase)
+        private readonly IBirdRepository _birdRepository;
+        private readonly ILogger<DeleteBirdByIdCommandHandler> _logger;
+        public DeleteBirdByIdCommandHandler(IBirdRepository birdRepository, ILogger<DeleteBirdByIdCommandHandler> logger)
         {
-            _mockDatabase = mockDatabase;
+            _logger = logger;
+            _birdRepository = birdRepository;
         }
 
-        public Task<Bird> Handle(DeleteBirdByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Bird> Handle(DeleteBirdByIdCommand request, CancellationToken cancellationToken)
         {
-            var birdToDelete = _mockDatabase.Birds.FirstOrDefault(bird => bird.Id == request.Id);
-
-            if (birdToDelete != null)
+            try
             {
-                _mockDatabase.Birds.Remove(birdToDelete);
+
+                _logger.LogInformation("Starting to handle DeleteBirdByIdCommand for bird ID: {BirdId}", request.Id);
+                Bird birdToDelete = await _birdRepository.GetByIdAsync(request.Id);
+                if (birdToDelete == null)
+                {
+                    _logger.LogWarning("No bird with the given ID {BirdID} was found", request.Id);
+                    throw new InvalidOperationException("No Bird with the given id was found");
+                }
+
+                await _birdRepository.DeleteAsync(request.Id);
+
+                _logger.LogInformation("The bird was successfully deleted {BirdId}", request.Id);
+
+                return birdToDelete;
             }
-            else
+            catch (Exception ex)
             {
-                // Throw an exception or handle the null case as needed for your application
-                throw new InvalidOperationException("No bird with the given ID was found.");
+                _logger.LogError(ex, "Error occurred while handling deletion for bird by id {BirdId}", request.Id);
+                throw;
             }
 
 
-            return Task.FromResult(birdToDelete);
+
         }
+
 
 
 
