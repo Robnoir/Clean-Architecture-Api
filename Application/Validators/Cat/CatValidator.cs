@@ -10,9 +10,9 @@ namespace Application.Validators.Cat
 {
     public class CatValidator : AbstractValidator<CatDto>
     {
-        public CatValidator() 
-        { 
-            RuleFor(cat  => cat.Name)
+        public CatValidator()
+        {
+            RuleFor(cat => cat.Name)
                 .NotEmpty().WithMessage("Cat Name cant be empty")
                 .NotNull().WithMessage("Cat name can not be null");
             RuleFor(cat => cat.Breed)

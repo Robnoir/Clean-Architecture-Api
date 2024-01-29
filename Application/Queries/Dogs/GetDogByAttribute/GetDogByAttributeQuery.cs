@@ -16,7 +16,7 @@ namespace Application.Queries.Dogs.GetDogByAttribute
         public GetDogByAttributeQuery(string breed, int? weight)
         {
             Breed = breed;
-            Weight = weight;    
+            Weight = weight;
         }
     }
 }

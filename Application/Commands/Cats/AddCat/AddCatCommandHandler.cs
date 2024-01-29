@@ -45,10 +45,10 @@ namespace Application.Commands.Cats.AddCat
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex,"Error occurred while handling AddCatCommand for cat: {CatName}",request.NewCat.Name);
+                _logger.LogError(ex, "Error occurred while handling AddCatCommand for cat: {CatName}", request.NewCat.Name);
                 throw;
             }
-          
+
         }
 
     }

@@ -9,17 +9,16 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Application.Commands.Birds.AddBird
 {
     public class AddBirdCommandHandler : IRequestHandler<AddBirdCommand, Bird>
     {
-       private readonly IBirdRepository _birdRepository;
+        private readonly IBirdRepository _birdRepository;
         private readonly ILogger<AddBirdCommandHandler> _logger;
 
-     
-        public AddBirdCommandHandler(IBirdRepository birdRepository, ILogger<AddBirdCommandHandler>logger)
+
+        public AddBirdCommandHandler(IBirdRepository birdRepository, ILogger<AddBirdCommandHandler> logger)
         {
             _birdRepository = birdRepository;
             _logger = logger;
@@ -56,10 +55,10 @@ namespace Application.Commands.Birds.AddBird
 
 
         }
-           
 
-           
 
-           
+
+
+
     }
 }

@@ -13,7 +13,7 @@ namespace Application.Validators.UserAnimal
     public class UserAnimalValidator : AbstractValidator<UserAnimalDto>
     {
 
-        public UserAnimalValidator() 
+        public UserAnimalValidator()
         {
             RuleFor(x => x.UserId).NotEmpty().WithMessage("User ID cannot be empty.");
 
@@ -27,12 +27,12 @@ namespace Application.Validators.UserAnimal
             RuleForEach(userAnimal => userAnimal.Cats)
                 .SetValidator(new CatValidator());
 
-            
+
             RuleForEach(userAnimal => userAnimal.Birds)
                 .SetValidator(new BirdValidator());
         }
 
     }
 
-    
+
 }

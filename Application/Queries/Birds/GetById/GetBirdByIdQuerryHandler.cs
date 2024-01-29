@@ -26,7 +26,7 @@ namespace Application.Queries.Birds.GetById
 
             try
             {
-                if(wantedBird == null)
+                if (wantedBird == null)
                 {
                     return null!;
                 }
@@ -38,7 +38,7 @@ namespace Application.Queries.Birds.GetById
             }
 
         }
-       
+
 
     }
 }

@@ -38,7 +38,7 @@ namespace Application.Commands.Birds.UpdateBird
 
                 // Updating the bird details
                 birdToUpdate.Name = request.UpdatedBird.Name;
-                
+
 
                 await _birdRepository.UpdateAsync(birdToUpdate);
 

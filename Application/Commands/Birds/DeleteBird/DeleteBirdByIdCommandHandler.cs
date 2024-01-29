@@ -31,7 +31,7 @@ namespace Application.Commands.Birds.DeleteBird
                 Bird birdToDelete = await _birdRepository.GetByIdAsync(request.Id);
                 if (birdToDelete == null)
                 {
-                    _logger.LogWarning("No bird with the given ID {BirdID} was found",request.Id);
+                    _logger.LogWarning("No bird with the given ID {BirdID} was found", request.Id);
                     throw new InvalidOperationException("No Bird with the given id was found");
                 }
 
@@ -47,7 +47,7 @@ namespace Application.Commands.Birds.DeleteBird
                 throw;
             }
 
-          
+
 
         }
 

@@ -10,10 +10,10 @@ namespace Application.Commands.UserAnimal.AddUseranimal
 {
     public class AddUserAnimalCommand : IRequest<UserAnimalDto>
     {
-    
+
         public Guid UserId { get; set; }
         public Guid AnimalId { get; set; }
 
-      
+
     }
 }

@@ -10,99 +10,90 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Infrastructure.Database.Repositories.UserRepo;
 using Application.Queries.Users.GetByUsername;
+using Application.Validators.AuthValidations;
 
 namespace API.Controllers
 {
-    // Defines the route as "api/[controller]" and sets this class as an API controller.
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
-
-
-
         private readonly IUserRepository _userRepository;
         private readonly IMediator _mediator;
+        private readonly IConfiguration _configuration;
+        private readonly AuthValidation _authValidator;
 
-        public AuthController(IMediator mediator, IUserRepository userRepository, IConfiguration configuration)
+        public AuthController(IMediator mediator, IUserRepository userRepository, IConfiguration configuration, AuthValidation authValidator)
         {
-
             _userRepository = userRepository;
             _configuration = configuration;
             _mediator = mediator;
+            _authValidator = authValidator;
         }
 
-
-        // A static user instance for demonstration. In a real application, you'd use a database.
-        public static User user = new User();
-
-        private readonly IConfiguration _configuration;
-
-
-
-
-        // ------------------------------------------------------------------------------------------------------
         [AllowAnonymous]
         [HttpPost("register")]
-        public ActionResult<User> RegisterAsync(UserDto request)
+        public async Task<ActionResult<User>> RegisterAsync(UserDto request)
         {
+            var validationResult = _authValidator.Validate(request);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
 
-            // Hash the password before creating the user
+            var existingUser = await _userRepository.GetUserByUsernameAsync(request.Username);
+            if (existingUser != null)
+            {
+                return BadRequest("Username is already taken.");
+            }
+
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            User newUser = new User
+            {
+                Username = request.Username,
+                PasswordHash = passwordHash
+            };
 
-            // Create an AddUserCommand with the provided details
-
-            user.Username = request.Username;
-            user.PasswordHash = passwordHash;
-
-
-            _userRepository.AddUserAsync(user);
-            // Returns the registered user. (Note: In real apps, don't return sensitive data.)
-            return Ok(user);
-
+            await _userRepository.AddUserAsync(newUser);
+            return CreatedAtAction(nameof(Login), new { Username = newUser.Username });
         }
-        // ------------------------------------------------------------------------------------------------------
+
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserDto request)
         {
-            var user = await _mediator.Send(new GetByUsernameQuery(request.Username));
+            var validationResult = _authValidator.Validate(request);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
 
-            // Validate input
+            var user = await _mediator.Send(new GetByUsernameQuery(request.Username));
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
-                return Unauthorized("Användarnamnet eller lösenordet är felaktigt.");
+                return Unauthorized("Username or password is incorrect.");
             }
 
             var token = CreateToken(user);
             return Ok(new { Token = token });
-
         }
 
-
-        //Helper method to create a JWT token.
         private string CreateToken(User user)
         {
-            // Just the username is used as a claim.
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username)
             };
 
-            // Fetches the secret key from configuration. Secret key can't be null.
             var secretKey = _configuration["JwtSettings:SecretKey"];
             if (secretKey == null)
             {
                 throw new InvalidOperationException("Secret key must not be null.");
             }
 
-            // Creates security key using the fetched secret key.
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-
-            // Creates signing credentials using the security key.
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            // Creates the JWT token with the specified issuer, audience, claims, expiration date, and credentials.
             var token = new JwtSecurityToken(
                 issuer: _configuration["JwtSettings:Issuer"],
                 audience: _configuration["JwtSettings:Audience"],
@@ -111,7 +102,6 @@ namespace API.Controllers
                 signingCredentials: credentials
             );
 
-            // Serializes the token to a JWT string and returns it.
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
