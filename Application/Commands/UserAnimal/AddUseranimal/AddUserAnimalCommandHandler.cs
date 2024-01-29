@@ -25,14 +25,13 @@ namespace Application.Commands.UserAnimal.AddUseranimal
             {
                 _logger.LogInformation("Attempting to add user animal relationship for User ID: {UserId} and Animal Model ID: {AnimalId}", request.UserId, request.AnimalId);
 
-                // Logic to add user-animal relationship
-                await _repository.AddUserAnimalAsync(request.UserId, request.AnimalId);
+                var userAnimal = await _repository.AddUserAnimalAsync(request.UserId, request.AnimalId);
 
-                // Create and return the DTO with necessary details
                 UserAnimalDto userAnimalDto = new UserAnimalDto
                 {
-                    UserId = request.UserId,
-                    // Populate other fields as necessary
+                    UserId = userAnimal.UserId,
+                    AnimalId = userAnimal.AnimalId
+                    
                 };
 
                 _logger.LogInformation("Successfully added user animal relationship: {UserAnimalDto}", userAnimalDto);

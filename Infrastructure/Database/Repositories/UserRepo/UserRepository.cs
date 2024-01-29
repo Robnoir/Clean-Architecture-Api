@@ -53,14 +53,7 @@ namespace Infrastructure.Database.Repositories.UserRepo
             await _realDatabase.SaveChangesAsync();
         }
 
-        //public async Task<User> GetUserByUsernameAsync(string username)
-        //{
-        //    if (string.IsNullOrWhiteSpace(username))
-        //    {
-        //        throw new ArgumentException("Username can not be null or empty.", nameof(username));
-        //    }
-        //    return await _realDatabase.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
-        //}
+      
 
         public async Task<User> GetUserByUsernameAsync(string username)
         {

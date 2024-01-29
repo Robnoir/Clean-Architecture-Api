@@ -49,7 +49,7 @@ namespace Infrastructure.Database.Repositories.UserAnimalRepo
         }
         public async Task UpdateUserAnimalAsync(Guid userId, Guid currentAnimalModelId, Guid newAnimalModelId)
         {
-            // Ta bort den gamla relationen
+            
             var existingRelation = await _realDatabase.UserAnimals
                 .FirstOrDefaultAsync(ua => ua.UserId == userId && ua.AnimalId == currentAnimalModelId);
 
